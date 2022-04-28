@@ -5,7 +5,11 @@
 #include <string>
 
 namespace glcore {
-    unsigned int Texture::LoadTextureFromFile(const char *path) {
+    Texture::Texture(unsigned int id, std::string path, int width, int height)
+        : id{id}, path{path}, width{width}, height{height} {
+    }
+
+    Texture Texture::LoadTextureFromFile(const char *path) {
         unsigned int textureID;
         glGenTextures(1, &textureID);
 
@@ -38,14 +42,14 @@ namespace glcore {
             stbi_image_free(data);
         }
 
-        return textureID;
+        return Texture{textureID, path, width, height};
     }
 
-    unsigned int Texture::LoadTextureFromFile(const char *path,
-                                              const std::string &directory) {
+    Texture Texture::LoadTextureFromFile(const char *path,
+                                         const std::string &directory) {
         std::string filename = std::string(path);
         filename = directory + '/' + filename;
 
         return LoadTextureFromFile(filename.c_str());
     }
-}
+}// namespace glcore

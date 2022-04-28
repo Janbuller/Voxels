@@ -1,9 +1,10 @@
 #pragma once
 
-#include <vector>
-#include "glcore/Texture.h"
 #include "Vertex.h"
+#include "engine/RawMesh.h"
 #include "glcore/Shader.h"
+#include "glcore/Texture.h"
+#include <vector>
 
 namespace engine {
     class Mesh {
@@ -12,14 +13,17 @@ namespace engine {
         std::vector<unsigned int> indicies;
         std::vector<glcore::Texture> textures;
 
+        Mesh() {}
         Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indicies, std::vector<glcore::Texture> textures);
         void Draw(glcore::Shader &shader);
 
-        static Mesh LoadOBJ(const char* path, const std::string directory);
+        static Mesh FromRawMesh(RawMesh raw, std::vector<glcore::Texture> tex) {
+            return Mesh(raw.vertices, raw.indicies, tex);
+        }
+
+        void SetupBuffers();
     private:
         unsigned int VAO, VBO, EBO;
 
-        void SetupBuffers();
     };
-}
-
+}// namespace engine

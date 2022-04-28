@@ -1,4 +1,5 @@
 #include "VoxelGame/GameApp.h"
+#include "GLFW/glfw3.h"
 #include "VoxelGame/Block.h"
 #include "VoxelGame/Chunk.h"
 #include "engine/Application.h"
@@ -7,53 +8,40 @@
 #include "glcore/Shader.h"
 #include "glcore/Window.h"
 #include <functional>
+#include <utility>
 
 namespace VoxelGame {
     void GameApp::onCreate() {
         AppWindow.CaptureMouse(true);
-
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_CULL_FACE);
         glCullFace(GL_FRONT);
         glFrontFace(GL_CW);
+        Block::blocks.insert(std::make_pair(1, Block{BlockAtlas, BlockAtlasTexSize}));
 
-	Block::blocks[1] = Block{};
+	// lasse: 8.309 sec.
+	double timestart = glfwGetTime();
+	for(int i = 0; i < 25; i++) {
+	  chunk1.GenerateChunkMesh();
+	  chunk2.GenerateChunkMesh();
+	  chunk3.GenerateChunkMesh();
+	  chunk4.GenerateChunkMesh();
+	}
+	std::cout << glfwGetTime() - timestart << std::endl;
     }
-
     bool GameApp::onUpdate(double deltaTime) {
         DoInput(deltaTime);
-
         glClearColor(0.2, 0.3, 0.1, 1.0);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        glm::mat4 projection = glm::perspective(glm::radians(mainCam.Zoom), (float) AppWindow.width / (float) AppWindow.height, 0.1f, 100.0f);
+        glm::mat4 projection = glm::perspective(glm::radians(mainCam.Zoom), (float) AppWindow.width / (float) AppWindow.height, 0.1f, 10000.0f);
         glm::mat4 view = mainCam.GetViewMatrix();
 
-	chunk.Draw(0, 0, 0, view, projection);
-
-        // glm::mat4 model{1.0};
-        // model = glm::mat4{1.0};
-        // model = glm::translate(model, {0, 0, 0});
-        // model = glm::scale(model, {3, 3, 3});
-
-        // mainCube.bind();
-        // mainCube.setMat4("view", view);
-        // mainCube.setMat4("projection", projection);
-
-        // for (int z = 0; z < 16; z++) {
-        //     for (int y = 0; y < 16; y++) {
-        //         for (int x = 0; x < 16; x++) {
-        //             model = glm::mat4{1.0};
-        //             model = glm::translate(model, {x, y, z});
-        //             mainCube.setMat4("model", model);
-        //             cubeMesh.Draw(mainCube);
-        //         }
-        //     }
-        // }
-
+        chunk1.Draw(mainCube, 0, 0, 0, view, projection);
+        chunk2.Draw(mainCube, 1, 0, 0, view, projection);
+        chunk3.Draw(mainCube, 0, 0, 1, view, projection);
+        chunk4.Draw(mainCube, 1, 0, 1, view, projection);
         return true;
     }
-
     void GameApp::DoKeyboardInput(double deltaTime) {
         if (AppWindow.GetKeyState(GLFW_KEY_W) == glcore::Window::KeyState::KEY_PRESS)
             mainCam.ProcessKeyboard(engine::Camera::MovDir::FORWARD, deltaTime);
@@ -66,10 +54,10 @@ namespace VoxelGame {
     }
 
     void GameApp::DoMouseInput() {
-      // Get the relative mouse movement from the ~RelativeMouse~
-      // ~DeltaVariable~.
-      auto [x, y] = RelativeMouse.GetDelta(AppWindow.GetCursorPos());
+        // Get the relative mouse movement from the ~RelativeMouse~
+        // ~DeltaVariable~.
+        auto [x, y] = RelativeMouse.GetDelta(AppWindow.GetCursorPos());
 
-      mainCam.ProcessMouseMovement(x, -y, true);
+        mainCam.ProcessMouseMovement(x, -y, true);
     }
 }// namespace VoxelGame

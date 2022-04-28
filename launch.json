@@ -1,0 +1,13 @@
+{
+    "configurations": [
+	{
+	    "type": "cppdbg",
+	    "request": "launch",
+	    "name": "Json C++ LLDB default",
+	    "program": "${workspaceFolder}/build/voxels",
+	    "cwd": "${workspaceFolder}/",
+	    "args": [],
+	}
+    ]
+}
+
