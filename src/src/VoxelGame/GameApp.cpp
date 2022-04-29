@@ -18,16 +18,6 @@ namespace VoxelGame {
         glCullFace(GL_FRONT);
         glFrontFace(GL_CW);
         Block::blocks.insert(std::make_pair(1, Block{BlockAtlas, BlockAtlasTexSize}));
-
-	// lasse: 8.309 sec.
-	double timestart = glfwGetTime();
-	for(int i = 0; i < 25; i++) {
-	  chunk1.GenerateChunkMesh();
-	  chunk2.GenerateChunkMesh();
-	  chunk3.GenerateChunkMesh();
-	  chunk4.GenerateChunkMesh();
-	}
-	std::cout << glfwGetTime() - timestart << std::endl;
     }
     bool GameApp::onUpdate(double deltaTime) {
         DoInput(deltaTime);
@@ -36,10 +26,8 @@ namespace VoxelGame {
         glm::mat4 projection = glm::perspective(glm::radians(mainCam.Zoom), (float) AppWindow.width / (float) AppWindow.height, 0.1f, 10000.0f);
         glm::mat4 view = mainCam.GetViewMatrix();
 
-        chunk1.Draw(mainCube, 0, 0, 0, view, projection);
-        chunk2.Draw(mainCube, 1, 0, 0, view, projection);
-        chunk3.Draw(mainCube, 0, 0, 1, view, projection);
-        chunk4.Draw(mainCube, 1, 0, 1, view, projection);
+        // chunk1.Draw(mainCube, 0, 0, 0, view, projection);
+        map.Draw(mainCube, view, projection, mainCam.Position, 4);
         return true;
     }
     void GameApp::DoKeyboardInput(double deltaTime) {
@@ -51,6 +39,11 @@ namespace VoxelGame {
             mainCam.ProcessKeyboard(engine::Camera::MovDir::LEFT, deltaTime);
         if (AppWindow.GetKeyState(GLFW_KEY_D) == glcore::Window::KeyState::KEY_PRESS)
             mainCam.ProcessKeyboard(engine::Camera::MovDir::RIGHT, deltaTime);
+
+        if (AppWindow.GetKeyState(GLFW_KEY_LEFT_SHIFT) == glcore::Window::KeyState::KEY_PRESS)
+            mainCam.SetSpeed(25);
+        else
+            mainCam.SetSpeed(5);
     }
 
     void GameApp::DoMouseInput() {

@@ -21,7 +21,7 @@ namespace VoxelGame {
         glcore::Texture BlockAtlas;
 
     public:
-      Chunk(glcore::Texture BlockAtlas, int xOffset, int zOffset);
+      Chunk(glcore::Texture BlockAtlas, int xOffset, int zOffset, unsigned long Seed);
 
         void GenerateChunkMesh();
 

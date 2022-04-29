@@ -1,6 +1,7 @@
 #pragma once
 
 #include "VoxelGame/Chunk.h"
+#include "VoxelGame/Map.h"
 #include "engine/Application.h"
 #include "engine/Camera.h"
 #include "engine/DeltaVariable.h"
@@ -25,11 +26,8 @@ namespace VoxelGame {
         glcore::Texture BlockAtlas = glcore::Texture::LoadTextureFromFile("res/textures.png");
         int BlockAtlasTexSize = 16;
 
-      Chunk chunk1{BlockAtlas, 0, 0};
-      Chunk chunk2{BlockAtlas, 1, 0};
-      Chunk chunk3{BlockAtlas, 0, 1};
-      Chunk chunk4{BlockAtlas, 1, 1};
-
+      // Chunk chunk1{BlockAtlas, 0, 0};
+      Map map{BlockAtlas, 123456u};
     private:
         void onCreate() override;
         bool onUpdate(double deltaTime) override;

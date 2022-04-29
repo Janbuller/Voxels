@@ -11,12 +11,12 @@
 #include <map>
 
 namespace VoxelGame {
-    Chunk::Chunk(glcore::Texture BlockAtlas, int xOffset, int zOffset) : BlockAtlas(BlockAtlas) {
+  Chunk::Chunk(glcore::Texture BlockAtlas, int xOffset, int zOffset, unsigned long Seed) : BlockAtlas(BlockAtlas) {
         ChunkMesh.textures.push_back(BlockAtlas);
 
         ChunkBlocks.fill(0);
 
-        siv::PerlinNoise::seed_type seed = 123456u;
+        siv::PerlinNoise::seed_type seed = Seed;
         siv::PerlinNoise perlin{seed};
 
         for (int z = 0; z < SIZE_Z; z++) {
@@ -30,6 +30,7 @@ namespace VoxelGame {
                 }
             }
         }
+	GenerateChunkMesh();
     }
 
 
@@ -45,12 +46,12 @@ namespace VoxelGame {
                     if (currentBlockID == 0)
                         continue;
 
-                    Block currentBlock = Block::blocks.at(currentBlockID);
+                    Block& currentBlock = Block::blocks.at(currentBlockID);
 
                     for (int side = 0; side < currentBlock.Sides.size(); side++) {
 
-                        auto curSide = currentBlock.Sides[side];
-                        auto dirOffset = BlockSideInfo::unitVectorDir.at(curSide.Side);
+                        const auto& curSide = currentBlock.Sides[side];
+                        const auto& dirOffset = BlockSideInfo::unitVectorDir.at(curSide.Side);
                         auto posToCurSide = curBlockPos + dirOffset;
                         auto blockIdCurSide = GetBlockID(posToCurSide.x, posToCurSide.y, posToCurSide.z);
 
@@ -115,7 +116,7 @@ namespace VoxelGame {
         shader.setMat4("projection", projection);
 
         glm::mat4 model = glm::mat4{1.0};
-        model = glm::translate(model, (glm::vec3{xOffset, yOffset, zOffset} * (float) SIZE_X));
+        model = glm::translate(model, (glm::vec3{xOffset * SIZE_X, yOffset * SIZE_Y, zOffset * SIZE_Z}));
         shader.setMat4("model", model);
 
         ChunkMesh.Draw(shader);
