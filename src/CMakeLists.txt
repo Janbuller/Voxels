@@ -66,4 +66,4 @@ set_target_properties(voxels PROPERTIES
 
 target_include_directories(voxels PRIVATE include)
 
-target_link_libraries(voxels glfw glm glad)
+target_link_libraries(voxels glfw glm glad pthread tbb)

@@ -9,8 +9,11 @@ namespace VoxelGame {
   public:
     static std::map<unsigned int, Block> blocks;
 
-    Block(glcore::Texture texture, int texSize);
+    Block(glcore::Texture texture, int texSize, std::array<int, 6> textureIDs);
+    Block(glcore::Texture texture, int texSize, int textureID);
 
     std::vector<BlockSideInfo> Sides;
+  private:
+    void Init(glcore::Texture texture, int texSize, std::array<int, 6> textureIDs);
   };
 }

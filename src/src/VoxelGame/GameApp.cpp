@@ -17,17 +17,23 @@ namespace VoxelGame {
         glEnable(GL_CULL_FACE);
         glCullFace(GL_FRONT);
         glFrontFace(GL_CW);
-        Block::blocks.insert(std::make_pair(1, Block{BlockAtlas, BlockAtlasTexSize}));
+	// Grass
+        Block::blocks.insert(std::make_pair(1, Block{BlockAtlas, BlockAtlasTexSize, {2, 2, 0, 1, 2, 2}}));
+	// Dirt
+        Block::blocks.insert(std::make_pair(2, Block{BlockAtlas, BlockAtlasTexSize, 1}));
+	// Stone
+        Block::blocks.insert(std::make_pair(3, Block{BlockAtlas, BlockAtlasTexSize, 3}));
+	// Bedrock
+        Block::blocks.insert(std::make_pair(4, Block{BlockAtlas, BlockAtlasTexSize, 4}));
     }
     bool GameApp::onUpdate(double deltaTime) {
         DoInput(deltaTime);
-        glClearColor(0.2, 0.3, 0.1, 1.0);
+        glClearColor(0.7, 0.7, 0.7, 1.0);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glm::mat4 projection = glm::perspective(glm::radians(mainCam.Zoom), (float) AppWindow.width / (float) AppWindow.height, 0.1f, 10000.0f);
         glm::mat4 view = mainCam.GetViewMatrix();
 
-        // chunk1.Draw(mainCube, 0, 0, 0, view, projection);
-        map.Draw(mainCube, view, projection, mainCam.Position, 4);
+        map.Draw(mainCube, view, projection, mainCam.Position, 5);
         return true;
     }
     void GameApp::DoKeyboardInput(double deltaTime) {
@@ -44,6 +50,11 @@ namespace VoxelGame {
             mainCam.SetSpeed(25);
         else
             mainCam.SetSpeed(5);
+
+        if (AppWindow.GetKeyState(GLFW_KEY_R) == glcore::Window::KeyState::KEY_PRESS)
+	  mainCube.reload();
+        if (AppWindow.GetKeyState(GLFW_KEY_ESCAPE) == glcore::Window::KeyState::KEY_PRESS)
+	  AppWindow.CaptureMouse(!AppWindow.IsMouseCaptured());
     }
 
     void GameApp::DoMouseInput() {
