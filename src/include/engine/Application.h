@@ -18,5 +18,7 @@ namespace engine {
     virtual bool onUpdate(double deltaTime);
 
     virtual void onExit();
+
+    virtual void onKeyPressed(int key, int scancode, int action, int mods);
   };
 }// namespace engine

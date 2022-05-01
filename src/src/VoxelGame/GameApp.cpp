@@ -26,6 +26,7 @@ namespace VoxelGame {
 	// Bedrock
         Block::blocks.insert(std::make_pair(4, Block{BlockAtlas, BlockAtlasTexSize, 4}));
     }
+
     bool GameApp::onUpdate(double deltaTime) {
         DoInput(deltaTime);
         glClearColor(0.7, 0.7, 0.7, 1.0);
@@ -36,6 +37,10 @@ namespace VoxelGame {
         map.Draw(mainCube, view, projection, mainCam.Position, 5);
         return true;
     }
+
+  void GameApp::onKeyPressed(int key, int scancode, int action, int mods) {
+  }
+
     void GameApp::DoKeyboardInput(double deltaTime) {
         if (AppWindow.GetKeyState(GLFW_KEY_W) == glcore::Window::KeyState::KEY_PRESS)
             mainCam.ProcessKeyboard(engine::Camera::MovDir::FORWARD, deltaTime);

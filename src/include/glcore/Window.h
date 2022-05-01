@@ -12,7 +12,11 @@ namespace glcore {
   private:
     bool MouseCaptured = true;
     float lastFrame;
+
     void onWindowResize(int width, int height);
+    void onKeyPressed(int key, int scancode, int action, int mods);
+
+    std::function<void(int key, int scandcode, int action, int mods)> KeyPressedCallback;
 
     engine::DeltaVariable<double, 1> deltaTime;
 
@@ -45,5 +49,9 @@ namespace glcore {
     };
     KeyState GetKeyState(int key);
     std::array<double, 2> GetCursorPos();
+
+    void SetKeyPressedCallback(std::function<void(int key, int scandcode, int action, int mods)> Callback) {
+      KeyPressedCallback = Callback;
+    }
   };
 } // namespace glcore

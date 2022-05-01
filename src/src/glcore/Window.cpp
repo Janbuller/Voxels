@@ -13,6 +13,12 @@ namespace glcore {
     glViewport(0, 0, width, height);
   }
 
+  void Window::onKeyPressed(int key, int scancode, int action, int mods) {
+    if(KeyPressedCallback != nullptr) {
+      KeyPressedCallback(key, scancode, action, mods);
+    }
+  }
+
   Window::Window(int width, int height, std::string title) :
     width(width), height(height), title(title),
     deltaTime(std::array<double, 1>{ glfwGetTime() }){
@@ -24,12 +30,11 @@ namespace glcore {
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     window = glfwCreateWindow(width, height, title.c_str(), NULL, NULL);
-    if (!window)
-      {
+    if (!window) {
         glfwTerminate();
         throw -1;
-      }
-    
+    }
+
     glfwMakeContextCurrent(window);
     
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
@@ -37,7 +42,7 @@ namespace glcore {
       throw -1;
     }
 
-    glViewport(0, 0, 640, 480);
+    glViewport(0, 0, width, height);
     lastFrame = glfwGetTime();
 
     // Use c++ lambda function as callback for glfw, forwarding it to
@@ -50,8 +55,13 @@ namespace glcore {
     {
       static_cast<Window*>(glfwGetWindowUserPointer(w))->onWindowResize(width, height);
     };
-
     glfwSetWindowSizeCallback(window, windowSizeCallback);
+
+    auto keyCallback = [](GLFWwindow* w, int key, int scancode, int action, int mods)
+    {
+      static_cast<Window*>(glfwGetWindowUserPointer(w))->onKeyPressed(key, scancode, action, mods);
+    };
+    glfwSetKeyCallback(window, keyCallback);
   }
 
   Window::~Window() {
@@ -68,7 +78,7 @@ namespace glcore {
   }
 
   double Window::GetDeltaTime() {
-    return deltaTime.GetDelta( std::array<double, 1>{glfwGetTime()} )[0];
+    return deltaTime.GetDelta( {glfwGetTime()} )[0];
   }
 
   bool Window::ShouldClose() {
@@ -111,6 +121,6 @@ namespace glcore {
     double x, y;
     glfwGetCursorPos(window, &x, &y);
 
-    return std::array<double, 2>{x, y};
+    return {x, y};
   }
 } // namespace glcore

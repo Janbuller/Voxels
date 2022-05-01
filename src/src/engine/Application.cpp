@@ -1,9 +1,17 @@
 #include "engine/Application.h"
 #include "glcore/Window.h"
 #include <string>
+#include <iostream>
 
 namespace engine {
     Application::Application(int width, int height, std::string title) : AppWindow{width, height, title} {
+    auto keyCallback = [this](int key, int scancode, int action, int mods)
+    {
+      onKeyPressed(key, scancode, action, mods);
+    };
+
+
+    AppWindow.SetKeyPressedCallback(keyCallback);
     }
     void Application::run() {
         onCreate();
@@ -35,4 +43,7 @@ namespace engine {
     }
     void Application::onExit() {
     }
+
+  void Application::onKeyPressed(int key, int scancode, int action, int mods) {
+  }
 }// namespace engine

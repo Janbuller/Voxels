@@ -37,6 +37,7 @@ namespace VoxelGame {
             DoMouseInput();
         }
 
+        void onKeyPressed(int key, int scancode, int action, int mods) override;
         void DoKeyboardInput(double deltaTime);
         void DoMouseInput();
     };
