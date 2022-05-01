@@ -18,7 +18,8 @@ namespace engine {
         while (!AppWindow.ShouldClose()) {
             AppWindow.Update();
 
-            if (!onUpdate(AppWindow.GetDeltaTime())) {
+	    DeltaTime = AppWindow.GetDeltaTime();
+            if (!onUpdate()) {
                 AppWindow.SetShouldClose(true);
             }
 
@@ -29,7 +30,7 @@ namespace engine {
 
     void Application::onCreate() {
     }
-    bool Application::onUpdate(double deltaTime) {
+    bool Application::onUpdate() {
         glClearColor(0.2, 0.3, 0.1, 1.0);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 

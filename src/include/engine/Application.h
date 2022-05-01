@@ -7,6 +7,7 @@ namespace engine {
   class Application {
   protected:
     glcore::Window AppWindow;
+    double DeltaTime;
 
   public:
     Application(int width, int height, std::string title);
@@ -15,7 +16,7 @@ namespace engine {
   public:
     virtual void onCreate();
 
-    virtual bool onUpdate(double deltaTime);
+    virtual bool onUpdate();
 
     virtual void onExit();
 

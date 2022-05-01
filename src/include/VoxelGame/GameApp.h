@@ -30,7 +30,7 @@ namespace VoxelGame {
       Map map{BlockAtlas, 123456u};
     private:
         void onCreate() override;
-        bool onUpdate(double deltaTime) override;
+        bool onUpdate() override;
 
         void DoInput(double deltaTime) {
             DoKeyboardInput(deltaTime);

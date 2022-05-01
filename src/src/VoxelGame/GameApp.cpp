@@ -27,8 +27,8 @@ namespace VoxelGame {
         Block::blocks.insert(std::make_pair(4, Block{BlockAtlas, BlockAtlasTexSize, 4}));
     }
 
-    bool GameApp::onUpdate(double deltaTime) {
-        DoInput(deltaTime);
+    bool GameApp::onUpdate() {
+        DoInput(DeltaTime);
         glClearColor(0.7, 0.7, 0.7, 1.0);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glm::mat4 projection = glm::perspective(glm::radians(mainCam.Zoom), (float) AppWindow.width / (float) AppWindow.height, 0.1f, 10000.0f);
@@ -39,6 +39,10 @@ namespace VoxelGame {
     }
 
   void GameApp::onKeyPressed(int key, int scancode, int action, int mods) {
+        if (key == GLFW_KEY_R && action == GLFW_PRESS)
+	  mainCube.reload();
+        if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+	  AppWindow.CaptureMouse(!AppWindow.IsMouseCaptured());
   }
 
     void GameApp::DoKeyboardInput(double deltaTime) {
@@ -55,11 +59,6 @@ namespace VoxelGame {
             mainCam.SetSpeed(25);
         else
             mainCam.SetSpeed(5);
-
-        if (AppWindow.GetKeyState(GLFW_KEY_R) == glcore::Window::KeyState::KEY_PRESS)
-	  mainCube.reload();
-        if (AppWindow.GetKeyState(GLFW_KEY_ESCAPE) == glcore::Window::KeyState::KEY_PRESS)
-	  AppWindow.CaptureMouse(!AppWindow.IsMouseCaptured());
     }
 
     void GameApp::DoMouseInput() {
