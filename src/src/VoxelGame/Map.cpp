@@ -44,8 +44,7 @@ namespace VoxelGame {
 
     void Map::GenerateChunk(int x, int z) {
       auto ChunkPos = std::make_pair(x, z);
-      Chunks.insert({ChunkPos, Chunk{BlockAtlas, x, z, Seed}});
-      Chunks.at(ChunkPos).GenerateChunkMesh(x, z, this);
+      GenerateChunk(ChunkPos);
     }
 
     void Map::GenerateChunk(std::pair<int, int> pos) {
@@ -105,5 +104,27 @@ namespace VoxelGame {
     z &= 0xf;
 
     return GetBlockID(ChunkX, ChunkZ, x, y, z);
+  }
+
+  void Map::SetBlockID(unsigned int id, int ChunkX, int ChunkZ, int x, int y, int z) {
+    auto ChunkPos = std::make_pair(ChunkX, ChunkZ);
+    if (Chunks.count(ChunkPos) != 0) {
+      Chunks.at(ChunkPos).SetBlockID(id, x, y, z);
+    }
+  }
+
+  void Map::SetBlockID(unsigned int id, int x, int y, int z) {
+    int ChunkX = (x + (x<0)) / Chunk::SIZE_X;
+    int ChunkZ = (z + (z<0)) / Chunk::SIZE_Z;
+
+    ChunkX -= x < 0;
+    ChunkZ -= z < 0;
+
+    // This is the same as a modulo, which ignores the sign.
+    x &= 0xf;
+    z &= 0xf;
+
+    SetBlockID(id, ChunkX, ChunkZ, x, y, z);
+    GenerateChunk(ChunkX, ChunkZ);
   }
 }// namespace VoxelGame

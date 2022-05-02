@@ -21,5 +21,6 @@ namespace engine {
     virtual void onExit();
 
     virtual void onKeyPressed(int key, int scancode, int action, int mods);
+    virtual void onMouseButtonPressed(int button, int action, int mods);
   };
 }// namespace engine

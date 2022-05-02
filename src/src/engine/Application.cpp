@@ -5,14 +5,18 @@
 
 namespace engine {
     Application::Application(int width, int height, std::string title) : AppWindow{width, height, title} {
-    auto keyCallback = [this](int key, int scancode, int action, int mods)
-    {
-      onKeyPressed(key, scancode, action, mods);
-    };
 
+        auto keyCallback = [this](int key, int scancode, int action, int mods) {
+            onKeyPressed(key, scancode, action, mods);
+        };
+        AppWindow.SetKeyPressedCallback(keyCallback);
 
-    AppWindow.SetKeyPressedCallback(keyCallback);
+        auto mouseButtonCallback = [this](int button, int action, int mods) {
+            onMouseButtonPressed(button, action, mods);
+        };
+        AppWindow.SetMouseButtonPressedCallback(mouseButtonCallback);
     }
+
     void Application::run() {
         onCreate();
         while (!AppWindow.ShouldClose()) {
@@ -46,5 +50,10 @@ namespace engine {
     }
 
   void Application::onKeyPressed(int key, int scancode, int action, int mods) {
+
+  }
+
+  void Application::onMouseButtonPressed(int button, int action, int mods) {
+    
   }
 }// namespace engine

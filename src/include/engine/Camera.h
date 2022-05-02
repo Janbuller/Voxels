@@ -54,6 +54,7 @@ namespace engine {
             updateCameraVectors();
         }
 
+      glm::mat4 GetProjectionMatrix(int width, int height);
         glm::mat4 GetViewMatrix();
 
         void ProcessKeyboard(MovDir direction, float deltaTime);

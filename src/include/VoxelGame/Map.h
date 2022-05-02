@@ -31,5 +31,7 @@ namespace VoxelGame {
     void Draw(glcore::Shader Shader, glm::mat4 view, glm::mat4 projection, glm::vec3 PlayerPosition, int RenderDistance);
     unsigned int GetBlockID(int ChunkX, int ChunkZ, int x, int y, int z) const;
     unsigned int GetBlockID(int x, int y, int z) const;
+    void SetBlockID(unsigned int id, int ChunkX, int ChunkZ, int x, int y, int z);
+    void SetBlockID(unsigned int id, int x, int y, int z);
   };
 }

@@ -1,5 +1,9 @@
 #include "engine/Camera.h"
 
+glm::mat4 engine::Camera::GetProjectionMatrix(int width, int height) {
+  return glm::perspective(glm::radians(Zoom), (float) width / (float) height, 0.1f, 5000.0f);
+}
+
 glm::mat4 engine::Camera::GetViewMatrix() {
   return glm::lookAt(Position, Position + Front, Up);
 }

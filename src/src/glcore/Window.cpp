@@ -19,6 +19,12 @@ namespace glcore {
     }
   }
 
+  void Window::onMouseButtonPressed(int button, int action, int mods) {
+    if(MouseButtonPressedCallback != nullptr) {
+      MouseButtonPressedCallback(button, action, mods);
+    }
+  }
+
   Window::Window(int width, int height, std::string title) :
     width(width), height(height), title(title),
     deltaTime(std::array<double, 1>{ glfwGetTime() }){
@@ -62,6 +68,12 @@ namespace glcore {
       static_cast<Window*>(glfwGetWindowUserPointer(w))->onKeyPressed(key, scancode, action, mods);
     };
     glfwSetKeyCallback(window, keyCallback);
+
+    auto mouseButtonCallback = [](GLFWwindow* w, int button, int action, int mods)
+    {
+      static_cast<Window*>(glfwGetWindowUserPointer(w))->onMouseButtonPressed(button, action, mods);
+    };
+    glfwSetMouseButtonCallback(window, mouseButtonCallback);
   }
 
   Window::~Window() {
@@ -122,5 +134,14 @@ namespace glcore {
     glfwGetCursorPos(window, &x, &y);
 
     return {x, y};
+  }
+
+
+  void Window::SetKeyPressedCallback(std::function<void(int key, int scandcode, int action, int mods)> Callback) {
+    KeyPressedCallback = Callback;
+  }
+
+  void Window::SetMouseButtonPressedCallback(std::function<void(int button, int action, int mods)> Callback) {
+    MouseButtonPressedCallback = Callback;
   }
 } // namespace glcore
