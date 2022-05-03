@@ -7,28 +7,12 @@
 #include "glm/geometric.hpp"
 
 namespace VoxelGame {
-  void Player::CastRay(const Map* RaycastMap, glcore::Shader* mainCube, engine::Mesh* Indicator, int width, int height) {
+  void Player::CastRay(const Map* RaycastMap) {
     glm::vec3 RayMovement = PlayerCam.Front / (float)RaycastQuality;
     glm::vec3 CurrentRaycastPosition = PlayerCam.Position;
 
     for(int i = 0; i < RayDistance * RaycastQuality; i++) {
       CurrentRaycastPosition += RayMovement;
-
-      glm::mat4 projection = PlayerCam.GetProjectionMatrix(width, height);
-      glm::mat4 view = PlayerCam.GetViewMatrix();
-
-      mainCube->bind();
-      mainCube->setMat4("view", view);
-      mainCube->setMat4("projection", projection);
-      
-      glm::mat4 model = glm::mat4{1.0};
-      model = glm::translate(model, CurrentRaycastPosition);
-      model = glm::scale(model, glm::vec3{0.01});
-      mainCube->setMat4("model", model);
-      
-      mainCube->setFloat("FogDistance", 6);
-      
-      Indicator->Draw(*mainCube);
 
       glm::vec3 BlockPos = CurrentRaycastPosition - glm::vec3{0.5, -0.5, 0.5};
       if(RaycastMap->GetBlockID(BlockPos.x, BlockPos.y, BlockPos.z)) {
@@ -45,8 +29,8 @@ namespace VoxelGame {
     
   }
 
-  void Player::Update(const Map* RaycastMap, glcore::Shader* mainCube, engine::Mesh* Indicator, int width, int height) {
-    CastRay(RaycastMap, mainCube, Indicator, width, height);
+void Player::Update(const Map* RaycastMap) {
+    CastRay(RaycastMap);
   }
 
   void Player::HandleKeyboard(engine::Camera::MovDir dir, double DeltaTime) {

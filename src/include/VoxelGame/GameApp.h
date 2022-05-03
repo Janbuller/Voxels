@@ -19,17 +19,18 @@ namespace VoxelGame {
 
     private:
         // engine::Mesh cubeMesh = engine::Mesh::LoadOBJ("cube.obj", "res/");
-      Player MainPlayer{{0.0f, 64.0f, 0.0f}};
-        glcore::Shader mainCube{"res/shaders/mainCube.vert", "res/shaders/mainCube.frag"};
+        Player MainPlayer{{0.0f, 64.0f, 0.0f}};
+        glcore::Shader MainCube{"res/shaders/mainCube.vert", "res/shaders/mainCube.frag"};
 
         engine::DeltaVariable<double, 2> RelativeMouse{std::array<double, 2>{0, 0}};
 
         glcore::Texture BlockAtlas = glcore::Texture::LoadTextureFromFile("res/textures.png");
         int BlockAtlasTexSize = 16;
 
-      Map map{BlockAtlas, 123456u};
+        Map MainMap{BlockAtlas, 123456u};
 
-      engine::Mesh indicator = engine::Mesh::FromRawMesh(engine::RawMesh::LoadOBJ("cube.obj", "res"), {glcore::Texture::LoadTextureFromFile("res/texture.png")});
+        engine::Mesh indicator = engine::Mesh::FromRawMesh(engine::RawMesh::LoadOBJ("cube.obj", "res"), {glcore::Texture::LoadTextureFromFile("res/texture.png")});
+
     private:
         void onCreate() override;
         bool onUpdate() override;

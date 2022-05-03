@@ -12,14 +12,12 @@
 #include <utility>
 
 namespace VoxelGame {
-    using std::endl;
-
     void GameApp::onCreate() {
         AppWindow.CaptureMouse(true);
         glEnable(GL_DEPTH_TEST);
-        // glEnable(GL_CULL_FACE);
-        // glCullFace(GL_FRONT);
-        // glFrontFace(GL_CW);
+        glEnable(GL_CULL_FACE);
+        glCullFace(GL_FRONT);
+        glFrontFace(GL_CW);
         // Grass
         Block::blocks.insert(std::make_pair(1, Block{BlockAtlas, BlockAtlasTexSize, {2, 2, 0, 1, 2, 2}}));
         // Dirt
@@ -35,16 +33,16 @@ namespace VoxelGame {
         glClearColor(0.7, 0.7, 0.7, 1.0);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        MainPlayer.Update(&map, &mainCube, &indicator, AppWindow.width, AppWindow.height);
+        MainPlayer.Update(&MainMap);
 
         glm::mat4 projection = MainPlayer.PlayerCam.GetProjectionMatrix(AppWindow.width, AppWindow.height);
         glm::mat4 view = MainPlayer.PlayerCam.GetViewMatrix();
-        map.Draw(mainCube, view, projection, MainPlayer.PlayerCam.Position, 6);
+        MainMap.Draw(MainCube, view, projection, MainPlayer.PlayerCam.Position, 6);
 
         if (MainPlayer.RayHit) {
-            mainCube.bind();
-            mainCube.setMat4("view", view);
-            mainCube.setMat4("projection", projection);
+            MainCube.bind();
+            MainCube.setMat4("view", view);
+            MainCube.setMat4("projection", projection);
 
             glm::mat4 model = glm::mat4{1.0};
             int x = MainPlayer.LookRayHitLoc.x;
@@ -52,11 +50,11 @@ namespace VoxelGame {
             int z = MainPlayer.LookRayHitLoc.z;
             model = glm::translate(model, glm::vec3{x, y, z});
             model = glm::scale(model, glm::vec3{1.1});
-            mainCube.setMat4("model", model);
+            MainCube.setMat4("model", model);
 
-            mainCube.setFloat("FogDistance", 6);
+            MainCube.setFloat("FogDistance", 6);
 
-            indicator.Draw(mainCube);
+            indicator.Draw(MainCube);
         }
 
         return true;
@@ -64,7 +62,7 @@ namespace VoxelGame {
 
     void GameApp::onKeyPressed(int key, int scancode, int action, int mods) {
         if (key == GLFW_KEY_R && action == GLFW_PRESS)
-            mainCube.reload();
+            MainCube.reload();
         if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
             AppWindow.CaptureMouse(!AppWindow.IsMouseCaptured());
 
@@ -79,7 +77,7 @@ namespace VoxelGame {
     void GameApp::onMouseButtonPressed(int button, int action, int mods) {
         if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
             if (MainPlayer.RayHit) {
-                map.SetBlockID(0,
+                MainMap.SetBlockID(0,
                                MainPlayer.LookRayHitLoc.x,
                                MainPlayer.LookRayHitLoc.y,
                                MainPlayer.LookRayHitLoc.z);
@@ -100,7 +98,7 @@ namespace VoxelGame {
 
     void GameApp::DoMouseInput() {
         // Get the relative mouse movement from the ~RelativeMouse~
-        // ~DeltaVariable~.
+        // DeltaVariable.
         auto [x, y] = RelativeMouse.GetDelta(AppWindow.GetCursorPos());
 
         MainPlayer.PlayerCam.ProcessMouseMovement(x, -y, true);
