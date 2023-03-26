@@ -12,26 +12,26 @@
 namespace glcore {
   class Shader {
   private:
-    const char *vertexPath;
-    const char *fragmentPath;
+    const char *m_VertexPath;
+    const char *m_FragmentPath;
   public:
     unsigned int ID;
     
-    Shader(const char *vertexPath, const char *fragmentPath);
+    Shader(const char *VertexPath, const char *FragmentPath);
     
-    GLuint loadShaderFromFiles(const char *vertexPath, const char *fragmentPath);
+    GLuint LoadShaderFromFiles(const char *VertexPath, const char *FragmentPath);
     
-    void bind();
+    void Bind();
     
-    void setBool(const std::string &name, bool value) const;
-    void setInt(const std::string &name, int value) const;
-    void setFloat(const std::string &name, float value) const;
-    void setVec2(const std::string &name, float x, float y) const;
-    void setVec3(const std::string &name, float x, float y, float z) const;
-    void setVec3(const std::string &name, const glm::vec3 &value) const;
-    void setVec3(const std::string &name, const float value[]) const;
-    void setMat4(const std::string &name, const glm::mat4 &mat) const;
+    void SetBool (const std::string &Name, bool Value) const;
+    void SetInt  (const std::string &Name, int Value) const;
+    void SetFloat(const std::string &Name, float Value) const;
+    void SetVec2 (const std::string &Name, float x, float y) const;
+    void SetVec3 (const std::string &Name, float x, float y, float z) const;
+    void SetVec3 (const std::string &Name, const glm::vec3 &Value) const;
+    void SetVec3 (const std::string &Name, const float Value[]) const;
+    void SetMat4 (const std::string &Name, const glm::mat4 &Mat) const;
     
-    void reload();
+    void Reload();
   };
 }

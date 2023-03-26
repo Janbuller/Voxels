@@ -4,30 +4,30 @@
 #include <iostream>
 
 namespace engine {
-    Application::Application(int width, int height, std::string title) : AppWindow{width, height, title} {
+    Application::Application(int Width, int Height, std::string Title) : m_AppWindow{Width, Height, Title} {
 
-        auto keyCallback = [this](int key, int scancode, int action, int mods) {
-            onKeyPressed(key, scancode, action, mods);
+        auto keyCallback = [this](int Key, int Scancode, int Action, int Mods) {
+            onKeyPressed(Key, Scancode, Action, Mods);
         };
-        AppWindow.SetKeyPressedCallback(keyCallback);
+        m_AppWindow.SetKeyPressedCallback(keyCallback);
 
-        auto mouseButtonCallback = [this](int button, int action, int mods) {
-            onMouseButtonPressed(button, action, mods);
+        auto mouseButtonCallback = [this](int Button, int Action, int Mods) {
+            onMouseButtonPressed(Button, Action, Mods);
         };
-        AppWindow.SetMouseButtonPressedCallback(mouseButtonCallback);
+        m_AppWindow.SetMouseButtonPressedCallback(mouseButtonCallback);
     }
 
     void Application::run() {
         onCreate();
-        while (!AppWindow.ShouldClose()) {
-            AppWindow.Update();
+        while (!m_AppWindow.ShouldClose()) {
+            m_AppWindow.Update();
 
-	    DeltaTime = AppWindow.GetDeltaTime();
+	    m_DeltaTime = m_AppWindow.GetDeltaTime();
             if (!onUpdate()) {
-                AppWindow.SetShouldClose(true);
+                m_AppWindow.SetShouldClose(true);
             }
 
-            AppWindow.SwapBuffers();
+            m_AppWindow.SwapBuffers();
         }
         onExit();
     }
@@ -40,7 +40,7 @@ namespace engine {
 
         // Key 256 is the escape key.
         // This is used to avoid pulling in the glfw headers
-        if (AppWindow.GetKeyState(256) == glcore::Window::KeyState::KEY_PRESS) {
+        if (m_AppWindow.GetKeyState(256) == glcore::Window::KeyState::KEY_PRESS) {
             return false;
         }
 
@@ -49,11 +49,11 @@ namespace engine {
     void Application::onExit() {
     }
 
-  void Application::onKeyPressed(int key, int scancode, int action, int mods) {
+  void Application::onKeyPressed(int Key, int Scancode, int Action, int Mods) {
 
   }
 
-  void Application::onMouseButtonPressed(int button, int action, int mods) {
+  void Application::onMouseButtonPressed(int Button, int Action, int Mods) {
     
   }
 }// namespace engine

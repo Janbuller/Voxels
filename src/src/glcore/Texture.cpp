@@ -5,17 +5,17 @@
 #include <string>
 
 namespace glcore {
-    Texture::Texture(unsigned int id, std::string path, int width, int height)
-        : id{id}, path{path}, width{width}, height{height} {
+    Texture::Texture(unsigned int ID, std::string Path, int Width, int Height)
+        : m_ID{ID}, m_Path{Path}, m_Width{Width}, m_Height{Height} {
     }
 
-    Texture Texture::LoadTextureFromFile(const char *path) {
+    Texture Texture::LoadTextureFromFile(const char *Path) {
         unsigned int textureID;
         glGenTextures(1, &textureID);
 
         int width, height, nrComponents;
         unsigned char *data =
-                stbi_load(path, &width, &height, &nrComponents, 0);
+                stbi_load(Path, &width, &height, &nrComponents, 0);
         if (data) {
             GLenum format;
             if (nrComponents == 1)
@@ -39,17 +39,17 @@ namespace glcore {
 
             stbi_image_free(data);
         } else {
-            std::cout << "Failed to load texture: " << path << std::endl;
+            std::cout << "Failed to load texture: " << Path << std::endl;
             stbi_image_free(data);
         }
 
-        return Texture{textureID, path, width, height};
+        return Texture{textureID, Path, width, height};
     }
 
-    Texture Texture::LoadTextureFromFile(const char *path,
-                                         const std::string &directory) {
-        std::string filename = std::string(path);
-        filename = directory + '/' + filename;
+    Texture Texture::LoadTextureFromFile(const char *Path,
+                                         const std::string &Directory) {
+        std::string filename = std::string(Path);
+        filename = Directory + '/' + filename;
 
         return LoadTextureFromFile(filename.c_str());
     }

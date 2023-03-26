@@ -9,50 +9,50 @@
 
 namespace VoxelGame {
 
-  Block::Block(glcore::Texture texture, int texSize, std::array<int, 6> textureIDs) {
-    Init(texture, texSize, textureIDs);
-  }
+    Block::Block(glcore::Texture Texture, int TexSize, std::array<int, 6> TextureIDs) {
+        Init(Texture, TexSize, TextureIDs);
+    }
 
-  Block::Block(glcore::Texture texture, int texSize, int textureID) {
-    Init(texture, texSize, {textureID, textureID, textureID, textureID, textureID, textureID});
-  }
+    Block::Block(glcore::Texture Texture, int TexSize, int TextureID) {
+        Init(Texture, TexSize, {TextureID, TextureID, TextureID, TextureID, TextureID, TextureID});
+    }
 
-  void Block::Init(glcore::Texture texture, int texSize, std::array<int, 6> textures) {
-        Sides.push_back(
+    void Block::Init(glcore::Texture Texture, int TexSize, std::array<int, 6> Textures) {
+        m_Sides.push_back(
                 BlockSideInfo{
                         BlockSide::POS_X,
                         engine::RawMesh::LoadOBJ("cube-xp.obj", "res/models/cube-faces"),
-                        textures[0]});
-        Sides.push_back(
+                        Textures[0]});
+        m_Sides.push_back(
                 BlockSideInfo{
                         BlockSide::NEG_X,
                         engine::RawMesh::LoadOBJ("cube-xn.obj", "res/models/cube-faces"),
-                        textures[1]});
-        Sides.push_back(
+                        Textures[1]});
+        m_Sides.push_back(
                 BlockSideInfo{
                         BlockSide::POS_Y,
                         engine::RawMesh::LoadOBJ("cube-yp.obj", "res/models/cube-faces"),
-                        textures[2]});
-        Sides.push_back(
+                        Textures[2]});
+        m_Sides.push_back(
                 BlockSideInfo{
                         BlockSide::NEG_Y,
                         engine::RawMesh::LoadOBJ("cube-yn.obj", "res/models/cube-faces"),
-                        textures[3]});
-        Sides.push_back(
+                        Textures[3]});
+        m_Sides.push_back(
                 BlockSideInfo{
                         BlockSide::POS_Z,
                         engine::RawMesh::LoadOBJ("cube-zp.obj", "res/models/cube-faces"),
-                        textures[4]});
-        Sides.push_back(
+                        Textures[4]});
+        m_Sides.push_back(
                 BlockSideInfo{
                         BlockSide::NEG_Z,
                         engine::RawMesh::LoadOBJ("cube-zn.obj", "res/models/cube-faces"),
-                        textures[5]});
+                        Textures[5]});
 
-        for (int i = 0; i < Sides.size(); i++) {
-	  Sides[i].SetupTextureCoords(texture, texSize);
+        for (int i = 0; i < m_Sides.size(); i++) {
+            m_Sides[i].SetupTextureCoords(Texture, TexSize);
         }
     }
 
-    std::map<unsigned int, Block> Block::blocks = {};
+    std::map<unsigned int, Block> Block::m_Blocks = {};
 }// namespace VoxelGame

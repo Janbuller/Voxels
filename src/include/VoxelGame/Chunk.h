@@ -21,9 +21,9 @@ namespace VoxelGame {
         static const int SIZE_Z = 16;
 
     private:
-        std::array<unsigned int, SIZE_X * SIZE_Y * SIZE_Z> ChunkBlocks;
-        engine::Mesh ChunkMesh;
-        glcore::Texture BlockAtlas;
+        std::array<unsigned int, SIZE_X * SIZE_Y * SIZE_Z> m_ChunkBlocks;
+        engine::Mesh m_ChunkMesh;
+        glcore::Texture m_BlockAtlas;
 
     public:
       Chunk(glcore::Texture BlockAtlas, int ChunkOffsetX, int ChunkOffsetZ, unsigned long Seed);
@@ -32,8 +32,8 @@ namespace VoxelGame {
 
         unsigned int GetBlockID(int x, int y, int z) const;
 
-        void SetBlockID(unsigned int id, int x, int y, int z);
+        void SetBlockID(unsigned int ID, int x, int y, int z);
 
-      void Draw(glcore::Shader shader, int xOffset, int yOffset, int zOffset, glm::mat4 view, glm::mat4 projection, int RenderDistance);
+      void Draw(glcore::Shader Shader, int OffsetX, int OffsetY, int OffsetZ, glm::mat4 View, glm::mat4 Projection, int RenderDistance);
     };
 }// namespace VoxelGame

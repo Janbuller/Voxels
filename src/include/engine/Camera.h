@@ -23,47 +23,47 @@ namespace engine {
                             LEFT,
                             RIGHT };
 
-        glm::vec3 Position;
-        glm::vec3 Front;
-        glm::vec3 Up;
-        glm::vec3 Right;
-        glm::vec3 WorldUp;
+        glm::vec3 m_Position;
+        glm::vec3 m_Front;
+        glm::vec3 m_Up;
+        glm::vec3 m_Right;
+        glm::vec3 m_WorldUp;
 
-        float Yaw = YAW;
-        float Pitch = PITCH;
+        float m_Yaw = YAW;
+        float m_Pitch = PITCH;
 
-        float MovementSpeed;
-        float MouseSensitivity;
-        float Zoom;
+        float m_MovementSpeed;
+        float m_MouseSensitivity;
+        float m_Zoom;
 
-        Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f),
-               glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f))
-            : Front(glm::vec3(0.0f, 0.0f, -1.0f)), MovementSpeed(SPEED),
-              MouseSensitivity(SENSITIVITY), Zoom(ZOOM) {
+        Camera(glm::vec3 Position = glm::vec3(0.0f, 0.0f, 0.0f),
+               glm::vec3 Up = glm::vec3(0.0f, 1.0f, 0.0f))
+            : m_Front(glm::vec3(0.0f, 0.0f, -1.0f)), m_MovementSpeed(SPEED),
+              m_MouseSensitivity(SENSITIVITY), m_Zoom(ZOOM) {
 
-            Position = position;
-            WorldUp = up;
-            updateCameraVectors();
+            m_Position = Position;
+            m_WorldUp = Up;
+            UpdateCameraVectors();
         }
-        Camera(float posX, float posY, float posZ, float upX, float upY, float upZ)
-            : Front(glm::vec3(0.0f, 0.0f, -1.0f)), MovementSpeed(SPEED),
-              MouseSensitivity(SENSITIVITY), Zoom(ZOOM) {
+        Camera(float PosX, float PosY, float PosZ, float UpX, float UpY, float UpZ)
+            : m_Front(glm::vec3(0.0f, 0.0f, -1.0f)), m_MovementSpeed(SPEED),
+              m_MouseSensitivity(SENSITIVITY), m_Zoom(ZOOM) {
 
-            Position = glm::vec3(posX, posY, posZ);
-            WorldUp = glm::vec3(upX, upY, upZ);
-            updateCameraVectors();
+            m_Position = glm::vec3(PosX, PosY, PosZ);
+            m_WorldUp = glm::vec3(UpX, UpY, UpZ);
+            UpdateCameraVectors();
         }
 
-      glm::mat4 GetProjectionMatrix(int width, int height);
+      glm::mat4 GetProjectionMatrix(int Width, int Height);
         glm::mat4 GetViewMatrix();
 
-        void ProcessKeyboard(MovDir direction, float deltaTime);
+        void ProcessKeyboard(MovDir Direction, float DeltaTime);
 
-        void ProcessMouseMovement(float xoffset, float yoffset, bool limitPitch);
+        void ProcessMouseMovement(float OffsetX, float OffseteY, bool LimitPitch);
 
-        void SetSpeed(float speed);
+        void SetSpeed(float Speed);
 
     private:
-        void updateCameraVectors();
+        void UpdateCameraVectors();
     };
 }// namespace engine

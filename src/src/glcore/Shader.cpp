@@ -2,13 +2,13 @@
 
 namespace glcore {
     Shader::Shader(const char *vertexPath, const char *fragmentPath) {
-        ID = loadShaderFromFiles(vertexPath, fragmentPath);
+        ID = LoadShaderFromFiles(vertexPath, fragmentPath);
     }
 
-    GLuint Shader::loadShaderFromFiles(const char *vertexPath,
+    GLuint Shader::LoadShaderFromFiles(const char *vertexPath,
                                        const char *fragmentPath) {
-        this->vertexPath = vertexPath;
-        this->fragmentPath = fragmentPath;
+        m_VertexPath = vertexPath;
+        m_FragmentPath = fragmentPath;
 
         std::string vertexCode;
         std::string fragmentCode;
@@ -79,35 +79,35 @@ namespace glcore {
 
         return ID;
     }
-    void Shader::bind() { glUseProgram(ID); }
+    void Shader::Bind() { glUseProgram(ID); }
 
-    void Shader::setBool(const std::string &name, bool value) const {
-        glUniform1i(glGetUniformLocation(ID, name.c_str()), (int) value);
+    void Shader::SetBool(const std::string &Name, bool Value) const {
+        glUniform1i(glGetUniformLocation(ID, Name.c_str()), (int) Value);
     }
-    void Shader::setInt(const std::string &name, int value) const {
-        glUniform1i(glGetUniformLocation(ID, name.c_str()), value);
+    void Shader::SetInt(const std::string &Name, int Value) const {
+        glUniform1i(glGetUniformLocation(ID, Name.c_str()), Value);
     }
-    void Shader::setFloat(const std::string &name, float value) const {
-        glUniform1f(glGetUniformLocation(ID, name.c_str()), value);
+    void Shader::SetFloat(const std::string &Name, float Value) const {
+        glUniform1f(glGetUniformLocation(ID, Name.c_str()), Value);
     }
-    void Shader::setVec2(const std::string &name, float x, float y) const {
-        glUniform2f(glGetUniformLocation(ID, name.c_str()), x, y);
+    void Shader::SetVec2(const std::string &Name, float x, float y) const {
+        glUniform2f(glGetUniformLocation(ID, Name.c_str()), x, y);
     }
-    void Shader::setVec3(const std::string &name, float x, float y, float z) const {
-        glUniform3f(glGetUniformLocation(ID, name.c_str()), x, y, z);
+    void Shader::SetVec3(const std::string &Name, float x, float y, float z) const {
+        glUniform3f(glGetUniformLocation(ID, Name.c_str()), x, y, z);
     }
-    void Shader::setVec3(const std::string &name, const glm::vec3 &value) const {
-        glUniform3fv(glGetUniformLocation(ID, name.c_str()), 1, &value[0]);
+    void Shader::SetVec3(const std::string &Name, const glm::vec3 &Value) const {
+        glUniform3fv(glGetUniformLocation(ID, Name.c_str()), 1, &Value[0]);
     }
-    void Shader::setVec3(const std::string &name, const float value[]) const {
-        glUniform3fv(glGetUniformLocation(ID, name.c_str()), 1, &value[0]);
+    void Shader::SetVec3(const std::string &Name, const float Value[]) const {
+        glUniform3fv(glGetUniformLocation(ID, Name.c_str()), 1, &Value[0]);
     }
-    void Shader::setMat4(const std::string &name, const glm::mat4 &mat) const {
-        glUniformMatrix4fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE,
-                           &mat[0][0]);
+    void Shader::SetMat4(const std::string &Name, const glm::mat4 &Mat) const {
+        glUniformMatrix4fv(glGetUniformLocation(ID, Name.c_str()), 1, GL_FALSE,
+                           &Mat[0][0]);
     }
-    void Shader::reload() {
+    void Shader::Reload() {
         glDeleteProgram(ID);
-        ID = loadShaderFromFiles(vertexPath, fragmentPath);
+        ID = LoadShaderFromFiles(m_VertexPath, m_FragmentPath);
     }
 }// namespace glcore

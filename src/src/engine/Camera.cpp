@@ -1,55 +1,55 @@
 #include "engine/Camera.h"
 
-glm::mat4 engine::Camera::GetProjectionMatrix(int width, int height) {
-  return glm::perspective(glm::radians(Zoom), (float) width / (float) height, 0.1f, 5000.0f);
+glm::mat4 engine::Camera::GetProjectionMatrix(int Width, int Height) {
+  return glm::perspective(glm::radians(m_Zoom), (float) Width / (float) Height, 0.1f, 5000.0f);
 }
 
 glm::mat4 engine::Camera::GetViewMatrix() {
-  return glm::lookAt(Position, Position + Front, Up);
+  return glm::lookAt(m_Position, m_Position + m_Front, m_Up);
 }
 
-void engine::Camera::ProcessKeyboard(MovDir direction, float deltaTime) {
-  float velocity = MovementSpeed * deltaTime;
-  if (direction == Camera::MovDir::FORWARD)
-    Position += Front * velocity;
-  if (direction == Camera::MovDir::BACKWARD)
-    Position -= Front * velocity;
-  if (direction == Camera::MovDir::LEFT)
-    Position -= Right * velocity;
-  if (direction == Camera::MovDir::RIGHT)
-    Position += Right * velocity;
+void engine::Camera::ProcessKeyboard(MovDir Direction, float DeltaTime) {
+  float velocity = m_MovementSpeed * DeltaTime;
+  if (Direction == Camera::MovDir::FORWARD)
+    m_Position += m_Front * velocity;
+  if (Direction == Camera::MovDir::BACKWARD)
+    m_Position -= m_Front * velocity;
+  if (Direction == Camera::MovDir::LEFT)
+    m_Position -= m_Right * velocity;
+  if (Direction == Camera::MovDir::RIGHT)
+    m_Position += m_Right * velocity;
 
-  updateCameraVectors();
+  UpdateCameraVectors();
 }
 
-void engine::Camera::ProcessMouseMovement(float xoffset, float yoffset, bool limitPitch = true) {
-  xoffset *= MouseSensitivity;
-  yoffset *= MouseSensitivity;
+void engine::Camera::ProcessMouseMovement(float OffsetX, float OffsetY, bool LimitPitch = true) {
+  OffsetX *= m_MouseSensitivity;
+  OffsetY *= m_MouseSensitivity;
 
-  Yaw += xoffset;
-  Pitch += yoffset;
+  m_Yaw += OffsetX;
+  m_Pitch += OffsetY;
 
-  if (limitPitch) {
-    if (Pitch > 89.0f)
-      Pitch = 89.0f;
-    if (Pitch < -89.0f)
-      Pitch = -89.0f;
+  if (LimitPitch) {
+    if (m_Pitch > 89.0f)
+      m_Pitch = 89.0f;
+    if (m_Pitch < -89.0f)
+      m_Pitch = -89.0f;
   }
 
-  updateCameraVectors();
+  UpdateCameraVectors();
 }
 
-void engine::Camera::updateCameraVectors() {
+void engine::Camera::UpdateCameraVectors() {
   glm::vec3 front;
-  front.x = cos(glm::radians(Yaw)) * cos(glm::radians(Pitch));
-  front.y = sin(glm::radians(Pitch));
-  front.z = sin(glm::radians(Yaw)) * cos(glm::radians(Pitch));
-  Front = glm::normalize(front);
+  front.x = cos(glm::radians(m_Yaw)) * cos(glm::radians(m_Pitch));
+  front.y = sin(glm::radians(m_Pitch));
+  front.z = sin(glm::radians(m_Yaw)) * cos(glm::radians(m_Pitch));
+  m_Front = glm::normalize(front);
 
-  Right = glm::normalize(glm::cross(Front, WorldUp));
-  Up = glm::normalize((glm::cross(Right, Front)));
+  m_Right = glm::normalize(glm::cross(m_Front, m_WorldUp));
+  m_Up = glm::normalize((glm::cross(m_Right, m_Front)));
 }
 
-void engine::Camera::SetSpeed(float speed) {
-  MovementSpeed = speed;
+void engine::Camera::SetSpeed(float Speed) {
+  m_MovementSpeed = Speed;
 }

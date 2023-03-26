@@ -4,15 +4,15 @@
 
 namespace glcore {
     struct Texture {
-      unsigned int id;
-      std::string path;
+      unsigned int m_ID;
+      std::string m_Path;
 
-      int width, height;
+      int m_Width, m_Height;
 
-      Texture(unsigned int id, std::string path, int width, int height);
+      Texture(unsigned int ID, std::string Path, int Width, int Height);
 
-      static Texture LoadTextureFromFile(const char* path);
-      static Texture LoadTextureFromFile(const char* path, const std::string &directory);
+      static Texture LoadTextureFromFile(const char* Path);
+      static Texture LoadTextureFromFile(const char* Path, const std::string &Directory);
     };
 }
 

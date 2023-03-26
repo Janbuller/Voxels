@@ -7,13 +7,12 @@
 namespace engine {
     class RawMesh {
     public:
-        std::vector<Vertex> vertices;
-        std::vector<unsigned int> indicies;
+        std::vector<Vertex> m_Vertices;
+        std::vector<unsigned int> m_Indicies;
 
-        RawMesh(std::vector<Vertex> vertices, std::vector<unsigned int> indicies);
+        RawMesh(std::vector<Vertex> Vertices, std::vector<unsigned int> Indicies);
 
-        static RawMesh LoadOBJ(const char* path, const std::string directory);
+        static RawMesh LoadOBJ(const char* Path, const std::string Directory);
     private:
-        unsigned int VAO, VBO, EBO;
     };
 }

@@ -7,13 +7,13 @@
 namespace VoxelGame {
   class Block {
   public:
-    static std::map<unsigned int, Block> blocks;
+    static std::map<unsigned int, Block> m_Blocks;
 
-    Block(glcore::Texture texture, int texSize, std::array<int, 6> textureIDs);
-    Block(glcore::Texture texture, int texSize, int textureID);
+    Block(glcore::Texture Texture, int TexSize, std::array<int, 6> TextureIDs);
+    Block(glcore::Texture Texture, int TexSize, int TextureID);
 
-    std::vector<BlockSideInfo> Sides;
+    std::vector<BlockSideInfo> m_Sides;
   private:
-    void Init(glcore::Texture texture, int texSize, std::array<int, 6> textureIDs);
+    void Init(glcore::Texture Texture, int TexSize, std::array<int, 6> TextureIDs);
   };
 }

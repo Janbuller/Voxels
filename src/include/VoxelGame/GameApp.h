@@ -19,31 +19,31 @@ namespace VoxelGame {
 
     private:
         // engine::Mesh cubeMesh = engine::Mesh::LoadOBJ("cube.obj", "res/");
-        Player MainPlayer{{0.0f, 64.0f, 0.0f}};
-        glcore::Shader MainCube{"res/shaders/mainCube.vert", "res/shaders/mainCube.frag"};
+        Player m_MainPlayer{{0.0f, 64.0f, 0.0f}};
+        glcore::Shader m_MainCube{"res/shaders/mainCube.vert", "res/shaders/mainCube.frag"};
 
-        engine::DeltaVariable<double, 2> RelativeMouse{std::array<double, 2>{0, 0}};
+        engine::DeltaVariable<double, 2> m_RelativeMouse{std::array<double, 2>{0, 0}};
 
-        glcore::Texture BlockAtlas = glcore::Texture::LoadTextureFromFile("res/textures.png");
-        int BlockAtlasTexSize = 16;
+        glcore::Texture m_BlockAtlas = glcore::Texture::LoadTextureFromFile("res/textures.png");
+        int m_BlockAtlasTexSize = 16;
 
-        Map MainMap{BlockAtlas, 123456u};
+        Map m_MainMap{m_BlockAtlas, 123456u};
 
-        engine::Mesh indicator = engine::Mesh::FromRawMesh(engine::RawMesh::LoadOBJ("cube.obj", "res"), {glcore::Texture::LoadTextureFromFile("res/texture.png")});
+        engine::Mesh m_IndicatorMesh = engine::Mesh::FromRawMesh(engine::RawMesh::LoadOBJ("cube.obj", "res"), {glcore::Texture::LoadTextureFromFile("res/texture.png")});
 
     private:
         void onCreate() override;
         bool onUpdate() override;
 
-        void DoInput(double deltaTime) {
-            DoKeyboardInput(deltaTime);
+        void DoInput(double DeltaTime) {
+            DoKeyboardInput(DeltaTime);
             DoMouseInput();
         }
 
-        void onKeyPressed(int key, int scancode, int action, int mods) override;
-        void onMouseButtonPressed(int button, int action, int mods) override;
+        void onKeyPressed(int Key, int Scancode, int Action, int Mods) override;
+        void onMouseButtonPressed(int Button, int Action, int Mods) override;
 
-        void DoKeyboardInput(double deltaTime);
+        void DoKeyboardInput(double DeltaTime);
         void DoMouseInput();
     };
 }// namespace VoxelGame

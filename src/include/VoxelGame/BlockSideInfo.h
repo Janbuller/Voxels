@@ -16,11 +16,11 @@ namespace VoxelGame {
     };
 
     struct BlockSideInfo {
-        BlockSide Side;
-        engine::RawMesh Mesh;
-        int TextureIdx;
+        BlockSide m_Side;
+        engine::RawMesh m_Mesh;
+        int m_TextureIdx;
 
-        void SetupTextureCoords(glcore::Texture texture, int texSize);
+        void SetupTextureCoords(glcore::Texture Texture, int TexSize);
 
         BlockSideInfo(BlockSide Side, engine::RawMesh Mesh, int TextureIdx);
       static std::map<BlockSide, glm::vec3> SideToUnitVector;

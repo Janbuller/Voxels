@@ -14,10 +14,10 @@
 #include <memory>
 
 namespace VoxelGame {
-    Chunk::Chunk(glcore::Texture BlockAtlas, int ChunkOffsetX, int ChunkOffsetZ, unsigned long Seed) : BlockAtlas(BlockAtlas) {
-        ChunkMesh.textures.push_back(BlockAtlas);
+    Chunk::Chunk(glcore::Texture BlockAtlas, int ChunkOffsetX, int ChunkOffsetZ, unsigned long Seed) : m_BlockAtlas(BlockAtlas) {
+        m_ChunkMesh.m_Textures.push_back(BlockAtlas);
 
-        ChunkBlocks.fill(0);
+        m_ChunkBlocks.fill(0);
 
         siv::PerlinNoise::seed_type seed = Seed;
         siv::PerlinNoise perlin{seed};
@@ -54,8 +54,8 @@ namespace VoxelGame {
 
 
     void Chunk::GenerateChunkMesh(int ChunkOffsetX, int ChunkOffsetZ, const Map *Map) {
-      ChunkMesh = engine::Mesh{};
-      ChunkMesh.textures.push_back(BlockAtlas);
+      m_ChunkMesh = engine::Mesh{};
+      m_ChunkMesh.m_Textures.push_back(m_BlockAtlas);
         int indiciesAmount = 0;
         for (int z = 0; z < SIZE_Z; z++) {
             for (int y = 0; y < SIZE_Y; y++) {
@@ -69,27 +69,27 @@ namespace VoxelGame {
                     if (currentBlockID == 0)
                         continue;
 
-                    const Block &currentBlock = Block::blocks.at(currentBlockID);
+                    const Block &currentBlock = Block::m_Blocks.at(currentBlockID);
 
-                    for (int side = 0; side < currentBlock.Sides.size(); side++) {
+                    for (int side = 0; side < currentBlock.m_Sides.size(); side++) {
 
-                        const auto &curSide = currentBlock.Sides[side];
-                        const auto &dirOffset = BlockSideInfo::SideToUnitVector.at(curSide.Side);
+                        const auto &curSide = currentBlock.m_Sides[side];
+                        const auto &dirOffset = BlockSideInfo::SideToUnitVector.at(curSide.m_Side);
                         auto posToCurSide = curBlockPos + dirOffset;
                         auto blockIdCurSide = Map->GetBlockID((ChunkOffsetX * Chunk::SIZE_X) + posToCurSide.x, posToCurSide.y, (ChunkOffsetZ * Chunk::SIZE_Z) + posToCurSide.z);
 			// auto blockIdCurSide = Map->GetBlockID(ChunkOffsetX, ChunkOffsetZ, posToCurSide.x, posToCurSide.y, posToCurSide.z);
 
                         if (blockIdCurSide == 0) {
-                            for (int i = 0; i < currentBlock.Sides[side].Mesh.vertices.size(); i++) {
-                                auto currentVert = currentBlock.Sides[side].Mesh.vertices[i];
-                                currentVert.position += curBlockPos;
-                                ChunkMesh.vertices.push_back(currentVert);
+                            for (int i = 0; i < currentBlock.m_Sides[side].m_Mesh.m_Vertices.size(); i++) {
+                                auto currentVert = currentBlock.m_Sides[side].m_Mesh.m_Vertices[i];
+                                currentVert.Position += curBlockPos;
+                                m_ChunkMesh.m_Vertices.push_back(currentVert);
                             }
-                            for (int i = 0; i < currentBlock.Sides[side].Mesh.indicies.size(); i++) {
-                                ChunkMesh.indicies.push_back(currentBlock.Sides[side].Mesh.indicies[i] + indiciesAmount);
+                            for (int i = 0; i < currentBlock.m_Sides[side].m_Mesh.m_Indicies.size(); i++) {
+                                m_ChunkMesh.m_Indicies.push_back(currentBlock.m_Sides[side].m_Mesh.m_Indicies[i] + indiciesAmount);
                             }
 
-                            indiciesAmount += currentBlock.Sides[side].Mesh.indicies.size();
+                            indiciesAmount += currentBlock.m_Sides[side].m_Mesh.m_Indicies.size();
                         }
                     }
                 }
@@ -104,24 +104,24 @@ namespace VoxelGame {
             z < 0 || z >= SIZE_Z) {
             return 0;
         }
-        return ChunkBlocks[(z * SIZE_X * SIZE_Y) + (y * SIZE_X) + x];
+        return m_ChunkBlocks[(z * SIZE_X * SIZE_Y) + (y * SIZE_X) + x];
     }
 
-    void Chunk::SetBlockID(unsigned int id, int x, int y, int z) {
-        ChunkBlocks[(z * SIZE_X * SIZE_Y) + (y * SIZE_X) + x] = id;
+    void Chunk::SetBlockID(unsigned int ID, int x, int y, int z) {
+        m_ChunkBlocks[(z * SIZE_X * SIZE_Y) + (y * SIZE_X) + x] = ID;
     }
 
-  void Chunk::Draw(glcore::Shader shader, int xOffset, int yOffset, int zOffset, glm::mat4 view, glm::mat4 projection, int RenderDistance) {
-        shader.bind();
-        shader.setMat4("view", view);
-        shader.setMat4("projection", projection);
+  void Chunk::Draw(glcore::Shader Shader, int OffsetX, int OffsetY, int OffsetZ, glm::mat4 View, glm::mat4 Projection, int RenderDistance) {
+        Shader.Bind();
+        Shader.SetMat4("view", View);
+        Shader.SetMat4("projection", Projection);
 
         glm::mat4 model = glm::mat4{1.0};
-        model = glm::translate(model, (glm::vec3{xOffset * SIZE_X, yOffset * SIZE_Y, zOffset * SIZE_Z}));
-        shader.setMat4("model", model);
+        model = glm::translate(model, (glm::vec3{OffsetX * SIZE_X, OffsetY * SIZE_Y, OffsetZ * SIZE_Z}));
+        Shader.SetMat4("model", model);
 
-	shader.setFloat("FogDistance", RenderDistance);
-        ChunkMesh.Draw(shader);
+	Shader.SetFloat("FogDistance", RenderDistance);
+        m_ChunkMesh.Draw(Shader);
     }
 
 }// namespace VoxelGame

@@ -13,83 +13,83 @@
 
 namespace VoxelGame {
     void GameApp::onCreate() {
-        AppWindow.CaptureMouse(true);
+        m_AppWindow.CaptureMouse(true);
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_CULL_FACE);
         glCullFace(GL_FRONT);
         glFrontFace(GL_CW);
         // Grass
-        Block::blocks.insert(std::make_pair(1, Block{BlockAtlas, BlockAtlasTexSize, {2, 2, 0, 1, 2, 2}}));
+        Block::m_Blocks.insert(std::make_pair(1, Block{m_BlockAtlas, m_BlockAtlasTexSize, {2, 2, 0, 1, 2, 2}}));
         // Dirt
-        Block::blocks.insert(std::make_pair(2, Block{BlockAtlas, BlockAtlasTexSize, 1}));
+        Block::m_Blocks.insert(std::make_pair(2, Block{m_BlockAtlas, m_BlockAtlasTexSize, 1}));
         // Stone
-        Block::blocks.insert(std::make_pair(3, Block{BlockAtlas, BlockAtlasTexSize, 3}));
+        Block::m_Blocks.insert(std::make_pair(3, Block{m_BlockAtlas, m_BlockAtlasTexSize, 3}));
         // Bedrock
-        Block::blocks.insert(std::make_pair(4, Block{BlockAtlas, BlockAtlasTexSize, 4}));
+        Block::m_Blocks.insert(std::make_pair(4, Block{m_BlockAtlas, m_BlockAtlasTexSize, 4}));
         // Log
-        Block::blocks.insert(std::make_pair(5, Block{BlockAtlas, BlockAtlasTexSize, {6, 6, 5, 5, 6, 6}}));
+        Block::m_Blocks.insert(std::make_pair(5, Block{m_BlockAtlas, m_BlockAtlasTexSize, {6, 6, 5, 5, 6, 6}}));
     }
 
     bool GameApp::onUpdate() {
-        DoInput(DeltaTime);
+        DoInput(m_DeltaTime);
         glClearColor(0.7, 0.7, 0.7, 1.0);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        MainPlayer.Update(&MainMap);
+        m_MainPlayer.Update(&m_MainMap);
 
-        glm::mat4 projection = MainPlayer.PlayerCam.GetProjectionMatrix(AppWindow.width, AppWindow.height);
-        glm::mat4 view = MainPlayer.PlayerCam.GetViewMatrix();
-        MainMap.Draw(MainCube, view, projection, MainPlayer.PlayerCam.Position, 8);
+        glm::mat4 projection = m_MainPlayer.m_PlayerCam.GetProjectionMatrix(m_AppWindow.m_Width, m_AppWindow.m_Height);
+        glm::mat4 view = m_MainPlayer.m_PlayerCam.GetViewMatrix();
+        m_MainMap.Draw(m_MainCube, view, projection, m_MainPlayer.m_PlayerCam.m_Position, 8);
 
-        if (MainPlayer.RayHit) {
-            MainCube.bind();
-            MainCube.setMat4("view", view);
-            MainCube.setMat4("projection", projection);
+        if (m_MainPlayer.m_RayHit) {
+            m_MainCube.Bind();
+            m_MainCube.SetMat4("view", view);
+            m_MainCube.SetMat4("projection", projection);
 
             glm::mat4 model = glm::mat4{1.0};
-            int x = MainPlayer.LookRayHitLoc.x;
-            int y = MainPlayer.LookRayHitLoc.y;
-            int z = MainPlayer.LookRayHitLoc.z;
+            int x = m_MainPlayer.m_LookRayHitLoc.x;
+            int y = m_MainPlayer.m_LookRayHitLoc.y;
+            int z = m_MainPlayer.m_LookRayHitLoc.z;
             model = glm::translate(model, glm::vec3{x, y, z});
             model = glm::scale(model, glm::vec3{1.1});
-            MainCube.setMat4("model", model);
+            m_MainCube.SetMat4("model", model);
 
-            MainCube.setFloat("FogDistance", 6);
+            m_MainCube.SetFloat("FogDistance", 6);
 
-            indicator.Draw(MainCube);
+            m_IndicatorMesh.Draw(m_MainCube);
         }
 
         return true;
     }
 
-    void GameApp::onKeyPressed(int key, int scancode, int action, int mods) {
-        if (key == GLFW_KEY_R && action == GLFW_PRESS)
-            MainCube.reload();
-        if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-            AppWindow.CaptureMouse(!AppWindow.IsMouseCaptured());
+    void GameApp::onKeyPressed(int Key, int Scancode, int Action, int Mods) {
+        if (Key == GLFW_KEY_R && Action == GLFW_PRESS)
+            m_MainCube.Reload();
+        if (Key == GLFW_KEY_ESCAPE && Action == GLFW_PRESS)
+            m_AppWindow.CaptureMouse(!m_AppWindow.IsMouseCaptured());
 
-        if (key == GLFW_KEY_LEFT_SHIFT) {
-            if (action == GLFW_PRESS)
-                MainPlayer.PlayerCam.SetSpeed(25);
-            else if (action == GLFW_RELEASE)
-                MainPlayer.PlayerCam.SetSpeed(5);
+        if (Key == GLFW_KEY_LEFT_SHIFT) {
+            if (Action == GLFW_PRESS)
+                m_MainPlayer.m_PlayerCam.SetSpeed(25);
+            else if (Action == GLFW_RELEASE)
+                m_MainPlayer.m_PlayerCam.SetSpeed(5);
         }
     }
 
-    void GameApp::onMouseButtonPressed(int button, int action, int mods) {
-        if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
-            if (MainPlayer.RayHit) {
-                MainMap.SetBlockID(0,
-                               MainPlayer.LookRayHitLoc.x,
-                               MainPlayer.LookRayHitLoc.y,
-                               MainPlayer.LookRayHitLoc.z);
+    void GameApp::onMouseButtonPressed(int Button, int Action, int Mods) {
+        if (Button == GLFW_MOUSE_BUTTON_LEFT && Action == GLFW_PRESS) {
+            if (m_MainPlayer.m_RayHit) {
+                m_MainMap.SetBlockID(0,
+                               m_MainPlayer.m_LookRayHitLoc.x,
+                               m_MainPlayer.m_LookRayHitLoc.y,
+                               m_MainPlayer.m_LookRayHitLoc.z);
             }
         }
 
-        if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS) {
-            if (MainPlayer.RayHit) {
-		auto PlaceLoc = MainPlayer.LookRayHitLoc + MainPlayer.LookRaySide;
-                MainMap.SetBlockID(5,
+        if (Button == GLFW_MOUSE_BUTTON_RIGHT && Action == GLFW_PRESS) {
+            if (m_MainPlayer.m_RayHit) {
+		auto PlaceLoc = m_MainPlayer.m_LookRayHitLoc + m_MainPlayer.m_LookRaySide;
+                m_MainMap.SetBlockID(5,
                                PlaceLoc.x,
                                PlaceLoc.y,
                                PlaceLoc.z);
@@ -97,22 +97,22 @@ namespace VoxelGame {
         }
     }
 
-    void GameApp::DoKeyboardInput(double deltaTime) {
-        if (AppWindow.GetKeyState(GLFW_KEY_W) == glcore::Window::KeyState::KEY_PRESS)
-            MainPlayer.HandleKeyboard(engine::Camera::MovDir::FORWARD, deltaTime);
-        if (AppWindow.GetKeyState(GLFW_KEY_S) == glcore::Window::KeyState::KEY_PRESS)
-            MainPlayer.HandleKeyboard(engine::Camera::MovDir::BACKWARD, deltaTime);
-        if (AppWindow.GetKeyState(GLFW_KEY_A) == glcore::Window::KeyState::KEY_PRESS)
-            MainPlayer.HandleKeyboard(engine::Camera::MovDir::LEFT, deltaTime);
-        if (AppWindow.GetKeyState(GLFW_KEY_D) == glcore::Window::KeyState::KEY_PRESS)
-            MainPlayer.HandleKeyboard(engine::Camera::MovDir::RIGHT, deltaTime);
+    void GameApp::DoKeyboardInput(double DeltaTime) {
+        if (m_AppWindow.GetKeyState(GLFW_KEY_W) == glcore::Window::KeyState::KEY_PRESS)
+            m_MainPlayer.HandleKeyboard(engine::Camera::MovDir::FORWARD, DeltaTime);
+        if (m_AppWindow.GetKeyState(GLFW_KEY_S) == glcore::Window::KeyState::KEY_PRESS)
+            m_MainPlayer.HandleKeyboard(engine::Camera::MovDir::BACKWARD, DeltaTime);
+        if (m_AppWindow.GetKeyState(GLFW_KEY_A) == glcore::Window::KeyState::KEY_PRESS)
+            m_MainPlayer.HandleKeyboard(engine::Camera::MovDir::LEFT, DeltaTime);
+        if (m_AppWindow.GetKeyState(GLFW_KEY_D) == glcore::Window::KeyState::KEY_PRESS)
+            m_MainPlayer.HandleKeyboard(engine::Camera::MovDir::RIGHT, DeltaTime);
     }
 
     void GameApp::DoMouseInput() {
         // Get the relative mouse movement from the ~RelativeMouse~
         // DeltaVariable.
-        auto [x, y] = RelativeMouse.GetDelta(AppWindow.GetCursorPos());
+        auto [x, y] = m_RelativeMouse.GetDelta(m_AppWindow.GetCursorPos());
 
-        MainPlayer.PlayerCam.ProcessMouseMovement(x, -y, true);
+        m_MainPlayer.m_PlayerCam.ProcessMouseMovement(x, -y, true);
     }
 }// namespace VoxelGame

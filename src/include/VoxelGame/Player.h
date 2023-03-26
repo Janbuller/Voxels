@@ -8,21 +8,21 @@ namespace VoxelGame {
     class Player {
     private:
         void CastRay(const Map *RaycastMap);
-        const double RayDistance = 4.0;
-        const int RaycastQuality = 512;
+        const double m_RayDistance = 4.0;
+        const int m_RaycastQuality = 512;
 
     public:
-        engine::Camera PlayerCam;
+        engine::Camera m_PlayerCam;
 
-        bool RayHit = false;
-        glm::vec3 LookRayHitLoc;
-        glm::vec3 LookRaySide = glm::vec3{0, 1, 0};
+        bool m_RayHit = false;
+        glm::vec3 m_LookRayHitLoc;
+        glm::vec3 m_LookRaySide = glm::vec3{0, 1, 0};
 
-        Player(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f),
-               glm::vec3 up       = glm::vec3(0.0f, 1.0f, 0.0f));
+        Player(glm::vec3 Position = glm::vec3(0.0f, 0.0f, 0.0f),
+               glm::vec3 Up       = glm::vec3(0.0f, 1.0f, 0.0f));
 
         void Update(const Map *RaycastMap);
 
-        void HandleKeyboard(engine::Camera::MovDir dir, double DeltaTime);
+        void HandleKeyboard(engine::Camera::MovDir Dir, double DeltaTime);
     };
 }// namespace VoxelGame

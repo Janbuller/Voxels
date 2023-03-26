@@ -7,15 +7,15 @@
 #include <sstream>
 #include <vector>
 
-engine::RawMesh::RawMesh(std::vector<Vertex> vertices, std::vector<unsigned int> indicies) {
-  this->vertices = vertices;
-  this->indicies = indicies;
+engine::RawMesh::RawMesh(std::vector<Vertex> Vertices, std::vector<unsigned int> Indicies) {
+  this->m_Vertices = Vertices;
+  this->m_Indicies = Indicies;
 }
 
-engine::RawMesh engine::RawMesh::LoadOBJ(const char* path, const std::string directory) {
+engine::RawMesh engine::RawMesh::LoadOBJ(const char* Path, const std::string Directory) {
 
-  std::string filename = std::string(path);
-  filename = directory + '/' + filename;
+  std::string filename = std::string(Path);
+  filename = Directory + '/' + filename;
 
   std::vector<glm::vec3> vertPosLoaded;
   std::vector<glm::vec3> vertNormLoaded;
