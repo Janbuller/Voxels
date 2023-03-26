@@ -26,6 +26,8 @@ namespace VoxelGame {
         Block::blocks.insert(std::make_pair(3, Block{BlockAtlas, BlockAtlasTexSize, 3}));
         // Bedrock
         Block::blocks.insert(std::make_pair(4, Block{BlockAtlas, BlockAtlasTexSize, 4}));
+        // Log
+        Block::blocks.insert(std::make_pair(5, Block{BlockAtlas, BlockAtlasTexSize, {6, 6, 5, 5, 6, 6}}));
     }
 
     bool GameApp::onUpdate() {
@@ -37,7 +39,7 @@ namespace VoxelGame {
 
         glm::mat4 projection = MainPlayer.PlayerCam.GetProjectionMatrix(AppWindow.width, AppWindow.height);
         glm::mat4 view = MainPlayer.PlayerCam.GetViewMatrix();
-        MainMap.Draw(MainCube, view, projection, MainPlayer.PlayerCam.Position, 6);
+        MainMap.Draw(MainCube, view, projection, MainPlayer.PlayerCam.Position, 8);
 
         if (MainPlayer.RayHit) {
             MainCube.bind();
@@ -81,6 +83,16 @@ namespace VoxelGame {
                                MainPlayer.LookRayHitLoc.x,
                                MainPlayer.LookRayHitLoc.y,
                                MainPlayer.LookRayHitLoc.z);
+            }
+        }
+
+        if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS) {
+            if (MainPlayer.RayHit) {
+		auto PlaceLoc = MainPlayer.LookRayHitLoc + MainPlayer.LookRaySide;
+                MainMap.SetBlockID(5,
+                               PlaceLoc.x,
+                               PlaceLoc.y,
+                               PlaceLoc.z);
             }
         }
     }

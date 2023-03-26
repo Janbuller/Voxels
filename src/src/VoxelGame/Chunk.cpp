@@ -23,8 +23,8 @@ namespace VoxelGame {
         siv::PerlinNoise perlin{seed};
 
         for (int z = 0; z < SIZE_Z; z++) {
-            for (int x = 0; x < SIZE_X; x++) {
-                double noise = perlin.octave2D_01(((x + ChunkOffsetX * 16)) * 0.02, ((z + ChunkOffsetZ * 16)) * 0.02, 4);
+	    for (int x = 0; x < SIZE_X; x++) {
+	        double noise = perlin.octave2D_01(((x + ChunkOffsetX * 16)) * 0.02, ((z + ChunkOffsetZ * 16)) * 0.02, 4);
                 noise *= 40;
                 noise += 20;
 
@@ -62,19 +62,19 @@ namespace VoxelGame {
                 for (int x = 0; x < SIZE_X; x++) {
                     glm::vec3 curBlockPos{x, y, z};
 
-                    // unsigned int currentBlockID = Map->GetBlockID(ChunkOffsetX, ChunkOffsetZ, x, y, z);
-		    unsigned int currentBlockID = Map->GetBlockID((ChunkOffsetX * Chunk::SIZE_X) + x, y, (ChunkOffsetZ * Chunk::SIZE_Z) + z);
+                    unsigned int currentBlockID = Map->GetBlockID(ChunkOffsetX, ChunkOffsetZ, x, y, z);
+		    // unsigned int currentBlockID = Map->GetBlockID((ChunkOffsetX * Chunk::SIZE_X) + x, y, (ChunkOffsetZ * Chunk::SIZE_Z) + z);
 
 
                     if (currentBlockID == 0)
                         continue;
 
-                    Block &currentBlock = Block::blocks.at(currentBlockID);
+                    const Block &currentBlock = Block::blocks.at(currentBlockID);
 
                     for (int side = 0; side < currentBlock.Sides.size(); side++) {
 
                         const auto &curSide = currentBlock.Sides[side];
-                        const auto &dirOffset = BlockSideInfo::unitVectorDir.at(curSide.Side);
+                        const auto &dirOffset = BlockSideInfo::SideToUnitVector.at(curSide.Side);
                         auto posToCurSide = curBlockPos + dirOffset;
                         auto blockIdCurSide = Map->GetBlockID((ChunkOffsetX * Chunk::SIZE_X) + posToCurSide.x, posToCurSide.y, (ChunkOffsetZ * Chunk::SIZE_Z) + posToCurSide.z);
 			// auto blockIdCurSide = Map->GetBlockID(ChunkOffsetX, ChunkOffsetZ, posToCurSide.x, posToCurSide.y, posToCurSide.z);
@@ -96,7 +96,6 @@ namespace VoxelGame {
             }
         }
 
-        ChunkMesh.SetupBuffers();
     }
 
     unsigned int Chunk::GetBlockID(int x, int y, int z) const {

@@ -22,6 +22,7 @@ namespace engine {
         }
 
         void SetupBuffers();
+      bool Initialized = false;
     private:
         unsigned int VAO, VBO, EBO;
 

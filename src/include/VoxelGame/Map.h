@@ -17,8 +17,9 @@ namespace VoxelGame {
     unsigned long Seed;
     glcore::Texture BlockAtlas;
 
-    std::deque<std::pair<int, int>> ChunkGenQueue;
+    std::deque<std::pair<int, int>> ChunkGenQueue{};
 
+    bool ThreadRunning = false;
     std::thread ChunkGenerator;
 
     void GenerateChunk(int x, int y);

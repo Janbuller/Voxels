@@ -11,40 +11,51 @@ namespace VoxelGame {
 
     template<typename T>
     int sgn(T val) {
-	return (T(0) < val) - (val < T(0));
+        return (T(0) < val) - (val < T(0));
     }
 
-  void Player::CastRay(const Map* RaycastMap) {
-    glm::vec3 RayMovement = PlayerCam.Front / (float)RaycastQuality;
-    glm::vec3 CurrentRaycastPosition = PlayerCam.Position;
-    CurrentRaycastPosition += glm::vec3{
-	    sgn(CurrentRaycastPosition.x) * 0.5,
-	    sgn(CurrentRaycastPosition.y) * 0.5,
-	    sgn(CurrentRaycastPosition.z) * 0.5};
+    void Player::CastRay(const Map *RaycastMap) {
+        glm::vec3 RayMovement            = PlayerCam.Front / (float) RaycastQuality;
+        glm::vec3 CurrentRaycastPosition = PlayerCam.Position;
+        CurrentRaycastPosition += glm::vec3{
+                sgn(CurrentRaycastPosition.x) * 0.5,
+                sgn(CurrentRaycastPosition.y) * 0.5,
+                sgn(CurrentRaycastPosition.z) * 0.5};
 
-    for(int i = 0; i < RayDistance * RaycastQuality; i++) {
-      CurrentRaycastPosition += RayMovement;
+        for (int i = 0; i < RayDistance * RaycastQuality; i++) {
+            CurrentRaycastPosition += RayMovement;
 
-      glm::ivec3 BlockPos = CurrentRaycastPosition;
-      if(RaycastMap->GetBlockID(BlockPos.x, BlockPos.y, BlockPos.z)) {
-	RayHit = true;
-	LookRayHitLoc = BlockPos;
-	return;
-      }
+            glm::ivec3 BlockPos = CurrentRaycastPosition;
+            if (RaycastMap->GetBlockID(BlockPos.x, BlockPos.y, BlockPos.z)) {
+                RayHit        = true;
+                LookRayHitLoc = BlockPos;
+
+                auto RelativeLocVec = CurrentRaycastPosition - (glm::vec3) BlockPos;
+                RelativeLocVec -= glm::vec3{
+                        sgn(BlockPos.x) * 0.5,
+                        sgn(BlockPos.y) * 0.5,
+                        sgn(BlockPos.z) * 0.5};
+
+                std::cout << glm::to_string(RelativeLocVec) << std::endl;
+                LookRaySide = glm::vec3(
+		    (int) (RelativeLocVec.x > RelativeLocVec.y && RelativeLocVec.x > RelativeLocVec.z && RelativeLocVec.x > 0) -(int) (RelativeLocVec.x < RelativeLocVec.y && RelativeLocVec.x < RelativeLocVec.z && RelativeLocVec.x < 0),
+		    (int) (RelativeLocVec.y > RelativeLocVec.x && RelativeLocVec.y > RelativeLocVec.z && RelativeLocVec.y > 0) -(int) (RelativeLocVec.y < RelativeLocVec.x && RelativeLocVec.y < RelativeLocVec.z && RelativeLocVec.y < 0),
+		    (int) (RelativeLocVec.z > RelativeLocVec.y && RelativeLocVec.z > RelativeLocVec.x && RelativeLocVec.z > 0) -(int) (RelativeLocVec.z < RelativeLocVec.y && RelativeLocVec.z < RelativeLocVec.x && RelativeLocVec.z < 0));
+                return;
+            }
+        }
+
+        RayHit = false;
     }
 
-    RayHit = false;
-  }
+    Player::Player(glm::vec3 position, glm::vec3 up) : PlayerCam(position, up) {
+    }
 
-  Player::Player(glm::vec3 position, glm::vec3 up) : PlayerCam(position, up) {
-    
-  }
+    void Player::Update(const Map *RaycastMap) {
+        CastRay(RaycastMap);
+    }
 
-void Player::Update(const Map* RaycastMap) {
-    CastRay(RaycastMap);
-  }
-
-  void Player::HandleKeyboard(engine::Camera::MovDir dir, double DeltaTime) {
-    PlayerCam.ProcessKeyboard(dir, DeltaTime);
-  }
-}
+    void Player::HandleKeyboard(engine::Camera::MovDir dir, double DeltaTime) {
+        PlayerCam.ProcessKeyboard(dir, DeltaTime);
+    }
+}// namespace VoxelGame

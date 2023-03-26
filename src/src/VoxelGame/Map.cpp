@@ -23,13 +23,15 @@ namespace VoxelGame {
                 PlayerPosition.y / Chunk::SIZE_Y,
                 PlayerPosition.z / Chunk::SIZE_Z};
 
+	if(ThreadRunning)
+	  ChunkGenerator.join();
+
         for (int z = PlayerChunkPos.z - RenderDistance-1; z < PlayerChunkPos.z + RenderDistance; z++) {
             for (int x = PlayerChunkPos.x - RenderDistance-1; x < PlayerChunkPos.x + RenderDistance; x++) {
                 auto RenderedChunkPos = std::make_pair(x, z);
                 if (Chunks.count(RenderedChunkPos) == 0) {
                     if (std::find(ChunkGenQueue.begin(), ChunkGenQueue.end(), RenderedChunkPos) == ChunkGenQueue.end()) {
-                        // ChunkGenQueue.push_back(RenderedChunkPos);
-		      GenerateChunk(RenderedChunkPos);
+                      ChunkGenQueue.push_back(RenderedChunkPos);
                     }
                 } else {
 		  Chunks.at(RenderedChunkPos).Draw(Shader, RenderedChunkPos.first, 0, RenderedChunkPos.second, view, projection, RenderDistance);
@@ -37,8 +39,10 @@ namespace VoxelGame {
             }
         }
 
-        // ChunkGenerator.join();
-        // ChunkGenerator = std::thread{[this]() { GenerateMissingChunks(); }};
+	
+	// TODO: Profile whether to use threads or not.
+	// ChunkGenerator = std::thread(&Map::GenerateMissingChunks, this);
+	// ThreadRunning = true;
         GenerateMissingChunks();
     }
 
@@ -47,6 +51,8 @@ namespace VoxelGame {
       GenerateChunk(ChunkPos);
     }
 
+    // TODO: Make a way for chunks to only regenerate the sides of
+    //       their mesh when neighboor mesh is changed.
     void Map::GenerateChunk(std::pair<int, int> pos) {
       Chunks.insert({pos, Chunk{BlockAtlas, pos.first, pos.second, Seed}});
       Chunks.at(pos).GenerateChunkMesh(pos.first, pos.second, this);
@@ -55,29 +61,25 @@ namespace VoxelGame {
       auto xNeg = std::make_pair(pos.first - 1, pos.second);
       auto zPos = std::make_pair(pos.first, pos.second + 1);
       auto zNeg = std::make_pair(pos.first, pos.second - 1);
-      try {
+
+      if(Chunks.count(xPos))
+
           Chunks.at(xPos).GenerateChunkMesh(xPos.first, xPos.second, this);
-      } catch (std::out_of_range e) {}
-      try {
+      if(Chunks.count(xNeg))
           Chunks.at(xNeg).GenerateChunkMesh(xNeg.first, xNeg.second, this);
-      } catch (std::out_of_range e) {}
-      try {
+      if(Chunks.count(zPos))
           Chunks.at(zPos).GenerateChunkMesh(zPos.first, zPos.second, this);
-      } catch (std::out_of_range e) {}
-      try {
+      if(Chunks.count(zNeg))
           Chunks.at(zNeg).GenerateChunkMesh(zNeg.first, zNeg.second, this);
-      } catch (std::out_of_range e) {}
     }
 
     void Map::GenerateMissingChunks() {
-        std::for_each(
-                std::execution::seq,
-                ChunkGenQueue.begin(),
-                ChunkGenQueue.end(),
-                [this](auto &&item) {
-                    GenerateChunk(ChunkGenQueue.front());
-                    ChunkGenQueue.pop_front();
-                });
+      for(int i = 0; i < 1; i++) {
+	if(ChunkGenQueue.size()) {
+	  GenerateChunk(ChunkGenQueue.front());
+	  ChunkGenQueue.pop_front();
+	}
+      }
     }
 
 

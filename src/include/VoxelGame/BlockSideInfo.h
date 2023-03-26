@@ -3,6 +3,7 @@
 #include "glcore/Texture.h"
 #include "glm/fwd.hpp"
 #include <map>
+#include <unordered_map>
 namespace VoxelGame {
 
     enum class BlockSide {
@@ -22,6 +23,6 @@ namespace VoxelGame {
         void SetupTextureCoords(glcore::Texture texture, int texSize);
 
         BlockSideInfo(BlockSide Side, engine::RawMesh Mesh, int TextureIdx);
-      static std::map<BlockSide, glm::vec3> unitVectorDir;
+      static std::map<BlockSide, glm::vec3> SideToUnitVector;
     };
 }// namespace VoxelGame

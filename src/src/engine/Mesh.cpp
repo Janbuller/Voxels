@@ -9,7 +9,7 @@
 
 namespace engine {
     Mesh::Mesh(std::vector<Vertex> vertices, std::vector<unsigned int> indicies,
-                       std::vector<glcore::Texture> textures) {
+               std::vector<glcore::Texture> textures) {
         this->vertices = vertices;
         this->indicies = indicies;
         this->textures = textures;
@@ -42,9 +42,14 @@ namespace engine {
                               (void *) offsetof(Vertex, texCoords));
 
         glBindVertexArray(0);
+
+        Initialized = true;
     }
 
     void Mesh::Draw(glcore::Shader &shader) {
+        if (!Initialized)
+            SetupBuffers();
+
         int diffuseNr = 1;
 
         for (unsigned int i = 0; i < textures.size(); i++) {

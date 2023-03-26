@@ -3,6 +3,7 @@
 #include "glcore/Texture.h"
 #include "glm/fwd.hpp"
 #include <array>
+#include <unordered_map>
 namespace VoxelGame {
     void BlockSideInfo::SetupTextureCoords(glcore::Texture texture, int texSize) {
         // Get the amount of textures on the atlas.
@@ -37,13 +38,13 @@ namespace VoxelGame {
     BlockSideInfo::BlockSideInfo(BlockSide Side, engine::RawMesh Mesh, int TextureIdx) : Side(Side), Mesh(Mesh), TextureIdx(TextureIdx) {
     }
 
-    std::map<BlockSide, glm::vec3> BlockSideInfo::unitVectorDir = {
-            {BlockSide::POS_X, glm::vec3{1, 0, 0}},
-            {BlockSide::POS_Y, glm::vec3{0, 1, 0}},
-            {BlockSide::POS_Z, glm::vec3{0, 0, 1}},
+    std::map<BlockSide, glm::vec3> BlockSideInfo::SideToUnitVector = {
+            {BlockSide::POS_X, glm::ivec3{1, 0, 0}},
+            {BlockSide::POS_Y, glm::ivec3{0, 1, 0}},
+            {BlockSide::POS_Z, glm::ivec3{0, 0, 1}},
 
-            {BlockSide::NEG_X, glm::vec3{-1, 0, 0}},
-            {BlockSide::NEG_Y, glm::vec3{0, -1, 0}},
-            {BlockSide::NEG_Z, glm::vec3{0, 0, -1}},
+            {BlockSide::NEG_X, glm::ivec3{-1, 0, 0}},
+            {BlockSide::NEG_Y, glm::ivec3{0, -1, 0}},
+            {BlockSide::NEG_Z, glm::ivec3{0, 0, -1}},
     };
 }// namespace VoxelGame

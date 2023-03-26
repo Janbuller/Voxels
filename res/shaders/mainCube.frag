@@ -26,8 +26,7 @@ void main()
   vec3 lightDir = normalize(vec3(1.75, 1.346, 0.74));
 
   float diff = max(dot(norm, lightDir), 0.0);
-  diff = max(0.3, diff * 1.5);
-  diff = 1;
+  diff = max(0.65, diff * 1.5);
 
   vec4 textureColor = texture(material.texture_diffuse1, TexCoords);
   vec4 textureShaded = textureColor * diff;
@@ -38,6 +37,8 @@ void main()
   float far  = FogDistance;
   float fogAmount = LinearizeDepth(gl_FragCoord.z, near, far) / far;
   fogAmount = max(0.0, min((exp(fogAmount*1.9)-1)*0.2, 1.0));
+
+  fogAmount *= fogAmount * fogAmount * fogAmount * fogAmount;
 
   fragColor = mix(textureShaded, fogColor, fogAmount);
   // fragColor = texture(material.texture_diffuse1, TexCoords) * diff;
