@@ -66,31 +66,6 @@ if(NOT spdlog_POPULATED)
   add_subdirectory(${spdlog_SOURCE_DIR} ${spdlog_BINARY_DIR})
 endif()
 
-FetchContent_Declare(
-  assimp
-  GIT_REPOSITORY https://github.com/assimp/assimp.git
-  GIT_TAG v5.1.3
-)
-
-# Include assimp #
-#================#
-FetchContent_GetProperties(assimp)
-if(NOT assimp_POPULATED)
-  FetchContent_Populate(assimp)
-
-  set( ASSIMP_BUILD_TESTS OFF CACHE INTERNAL "If the test suite for Assimp is built in addition to the library." )
-  set( ASSIMP_INSTALL OFF CACHE INTERNAL "Disable this if you want to use assimp as a submodule." )
-  set( ASSIMP_NO_EXPORT ON CACHE INTERNAL "Disable Assimp's export functionality." )
-
-  set( ASSIMP_BUILD_ALL_IMPORTERS_BY_DEFAULT OFF )
-  set( ASSIMP_BUILD_FBX_IMPORTER ON )
-  set( ASSIMP_BUILD_OBJ_IMPORTER ON )
-  set( ASSIMP_BUILD_GLTF_IMPORTER ON )
-  set( ASSIMP_BUILD_BLEND_IMPORTER ON )
-
-  add_subdirectory(${assimp_SOURCE_DIR} ${assimp_BINARY_DIR})
-endif()
-
 option (FORCE_COLORED_OUTPUT "Always produce ANSI-colored output (GNU/Clang only)." TRUE)
 
 if (${FORCE_COLORED_OUTPUT})
@@ -116,4 +91,4 @@ set_target_properties(voxels PROPERTIES
 
 target_include_directories(voxels PRIVATE include)
 
-target_link_libraries(voxels glfw glm glad spdlog assimp tbb)
+target_link_libraries(voxels glfw glm glad spdlog tbb)

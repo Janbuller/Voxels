@@ -17,30 +17,46 @@ namespace VoxelGame {
     void Player::CastRay(const Map *RaycastMap) {
         glm::vec3 RayMovement            = m_PlayerCam.m_Front / (float) m_RaycastQuality;
         glm::vec3 CurrentRaycastPosition = m_PlayerCam.m_Position;
-        CurrentRaycastPosition += glm::vec3{
-                sgn(CurrentRaycastPosition.x) * 0.5,
-                sgn(CurrentRaycastPosition.y) * 0.5,
-                sgn(CurrentRaycastPosition.z) * 0.5};
 
         for (int i = 0; i < m_RayDistance * m_RaycastQuality; i++) {
             CurrentRaycastPosition += RayMovement;
 
-            glm::ivec3 BlockPos = CurrentRaycastPosition;
+            glm::ivec3 BlockPos = CurrentRaycastPosition + glm::vec3{
+								   sgn(CurrentRaycastPosition.x) * 0.5,
+								   sgn(CurrentRaycastPosition.y) * 0.5,
+								   sgn(CurrentRaycastPosition.z) * 0.5};
             if (RaycastMap->GetBlockID(BlockPos.x, BlockPos.y, BlockPos.z)) {
+		CurrentRaycastPosition += glm::vec3{
+			sgn(CurrentRaycastPosition.x) * 0.5,
+			sgn(CurrentRaycastPosition.y) * 0.5,
+			sgn(CurrentRaycastPosition.z) * 0.5};
                 m_RayHit        = true;
                 m_LookRayHitLoc = BlockPos;
 
+		// TODO: Add all the prints here to future debug screen.
+		// std::cout << glm::to_string(CurrentRaycastPosition - RayMovement * (float)i) << std::endl;
+		// std::cout << glm::to_string(CurrentRaycastPosition) << std::endl;
+		// std::cout << glm::to_string(BlockPos) << std::endl;
+
                 auto RelativeLocVec = CurrentRaycastPosition - (glm::vec3) BlockPos;
                 RelativeLocVec -= glm::vec3{
-                        sgn(BlockPos.x) * 0.5,
-                        sgn(BlockPos.y) * 0.5,
-                        sgn(BlockPos.z) * 0.5};
+                        sgn(CurrentRaycastPosition.x) * 0.5,
+                        sgn(CurrentRaycastPosition.y) * 0.5,
+                        sgn(CurrentRaycastPosition.z) * 0.5};
 
-                std::cout << glm::to_string(RelativeLocVec) << std::endl;
+		// std::cout << glm::to_string(RelativeLocVec) << std::endl;
+		
+                auto RelativeLocVecAbs = glm::vec3{
+		    std::abs(RelativeLocVec.x),
+		    std::abs(RelativeLocVec.y),
+		    std::abs(RelativeLocVec.z),
+		};
+
                 m_LookRaySide = glm::vec3(
-                        (int) (RelativeLocVec.x > RelativeLocVec.y && RelativeLocVec.x > RelativeLocVec.z && RelativeLocVec.x > 0) - (int) (RelativeLocVec.x < RelativeLocVec.y && RelativeLocVec.x < RelativeLocVec.z && RelativeLocVec.x < 0),
-                        (int) (RelativeLocVec.y > RelativeLocVec.x && RelativeLocVec.y > RelativeLocVec.z && RelativeLocVec.y > 0) - (int) (RelativeLocVec.y < RelativeLocVec.x && RelativeLocVec.y < RelativeLocVec.z && RelativeLocVec.y < 0),
-                        (int) (RelativeLocVec.z > RelativeLocVec.y && RelativeLocVec.z > RelativeLocVec.x && RelativeLocVec.z > 0) - (int) (RelativeLocVec.z < RelativeLocVec.y && RelativeLocVec.z < RelativeLocVec.x && RelativeLocVec.z < 0));
+		    (int) (RelativeLocVecAbs.x > RelativeLocVecAbs.y && RelativeLocVecAbs.x > RelativeLocVecAbs.z && RelativeLocVecAbs.x > 0) * sgn(RelativeLocVec.x),
+		    (int) (RelativeLocVecAbs.y > RelativeLocVecAbs.x && RelativeLocVecAbs.y > RelativeLocVecAbs.z && RelativeLocVecAbs.y > 0) * sgn(RelativeLocVec.y),
+		    (int) (RelativeLocVecAbs.z > RelativeLocVecAbs.y && RelativeLocVecAbs.z > RelativeLocVecAbs.x && RelativeLocVecAbs.z > 0) * sgn(RelativeLocVec.z));
+		// std::cout << glm::to_string(m_LookRaySide) << std::endl;
                 return;
             }
         }

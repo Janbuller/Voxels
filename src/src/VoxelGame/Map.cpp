@@ -4,6 +4,7 @@
 #include <chrono>
 #include <execution>
 #include <memory>
+#include <ostream>
 #include <pstl/glue_execution_defs.h>
 #include <stdexcept>
 #include <string>
