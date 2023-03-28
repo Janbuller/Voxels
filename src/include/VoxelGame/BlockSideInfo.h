@@ -1,7 +1,7 @@
 #pragma once
 #include "engine/RawMesh.h"
 #include "glcore/Texture.h"
-#include "glm/fwd.hpp"
+#include "glm/glm.hpp"
 #include <map>
 #include <unordered_map>
 namespace VoxelGame {

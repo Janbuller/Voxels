@@ -10,7 +10,7 @@
 
 int main(void) {
 
-  VoxelGame::GameApp app{640, 480, "Hello, World!"};
+  VoxelGame::GameApp app{640, 480, "Voxels!"};
   app.run();
 
   return 0;

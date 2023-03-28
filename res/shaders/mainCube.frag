@@ -41,6 +41,7 @@ void main()
   fogAmount *= fogAmount * fogAmount * fogAmount * fogAmount;
 
   fragColor = mix(textureShaded, fogColor, fogAmount);
+  // fragColor = textureShaded;
   // fragColor = texture(material.texture_diffuse1, TexCoords) * diff;
   // fragColor = vec4(vec3(fogAmount ), 1.0);
 }
